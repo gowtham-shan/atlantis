@@ -1,0 +1,48 @@
+spring:
+  mustache:
+    suffix: .html
+    cache: true
+  datasource:
+    driver-class-name: org.postgresql.Driver
+  jackson:
+    serialization:
+      fail-on-empty-beans: false
+  flyway:
+    enabled: false
+  jpa:
+    show-sql: true
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+  session:
+    store-type: jdbc
+    jdbc:
+      table-name: SPRING_SESSION
+      initialize-schema: always
+
+
+logging:
+  file:
+    path: logs
+---
+spring:
+  profiles: development
+  datasource:
+    url: jdbc:postgresql://localhost:5432/atlantis
+    username: atlantis
+    password: Wecandoit
+  jpa:
+    hibernate:
+      ddl-auto: none
+  mustache:
+    cache: false
+  devtools:
+    livereload:
+      enabled: true
+  flyway:
+    enabled: true
+---
+spring:
+  profiles: production
+  mustache:
+    cache: false
+  flyway:
+    baseline-on-migrate: true
