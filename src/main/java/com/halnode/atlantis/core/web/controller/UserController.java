@@ -28,17 +28,16 @@ public class UserController {
     private final TenantService tenantService;
 
     @GetMapping
-    public ResponseEntity<?> getUsers(){
+    public ResponseEntity<?> getUsers() {
         return ResponseEntity.ok(userRepository.findAll());
     }
 
     @PostMapping
     public ResponseEntity<?> register(@RequestBody User user) {
-                String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
+        String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
         User saved = userRepository.save(user);
         tenantService.initDatabase(user.getUserName());
-        //AuthUser created = userService.createUser(user);
         return ResponseEntity.ok(saved);
     }
 }

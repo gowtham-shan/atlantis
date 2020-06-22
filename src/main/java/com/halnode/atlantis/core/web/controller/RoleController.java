@@ -19,17 +19,18 @@ public class RoleController {
     private final RoleRepository roleRepository;
 
     @GetMapping
-    public ResponseEntity<?> getAllRoles(){
+    public ResponseEntity<?> getRoles(){
         return ResponseEntity.ok(roleRepository.findAll());
     }
+
     @PostMapping
-    public ResponseEntity<Role> createNote(@RequestBody Role role) {
+    public ResponseEntity<Role> createRole(@RequestBody Role role) {
         Role created = roleRepository.save(role);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Role> getNote(@PathVariable Long id) {
+    public ResponseEntity<Role> getRole(@PathVariable Long id) {
         Optional<Role> role = roleRepository.findById(id);
         return ResponseEntity.ok(role.get());
     }

@@ -48,11 +48,6 @@ public class TenantIdentifierResolver implements CurrentTenantIdentifierResolver
 
        }
         return DEFAULT_TENANT;
-
-//        return Optional.ofNullable(SecurityContextHolder.getContext().getAuthentication())
-//                .filter(Predicate.not(authentication -> authentication instanceof AnonymousAuthenticationToken))
-//                .map(Principal::getName)
-//                .orElse(DEFAULT_TENANT);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.halnode.atlantis.core.web.controller;
 
+import com.halnode.atlantis.core.persistence.dto.OrganizationDTO;
 import com.halnode.atlantis.core.persistence.model.Organization;
 import com.halnode.atlantis.core.persistence.model.User;
 import com.halnode.atlantis.core.persistence.repository.OrganizationRepository;
@@ -12,8 +13,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
-import java.util.Set;
+import java.util.List;
+
 
 @RestController
 @RequestMapping("/organization")
@@ -33,27 +34,24 @@ public class OrganizationController {
     private final TenantService tenantService;
 
     @GetMapping
-    public ResponseEntity<?> getOrganizations(){
+    public ResponseEntity<?> getOrganizations() {
         return ResponseEntity.ok(organizationRepository.findAll());
     }
 
     @PostMapping
-    public ResponseEntity<?> saveOrganization(@RequestBody Organization organization){
-//        if(!ObjectUtils.isEmpty(organization.getUsers())){
-//            organization.getUsers().stream().forEach(user -> {
-//                String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
-//                user.setPassword(encodedPassword);
-//                user.setOrganization(organization);
-//            });
-//        }
-//        Set<User> users=organization.getUsers();
-//        Optional<User> optionalUser = users.stream().findFirst();
-//        User user=optionalUser.get();
-//        String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
-//        user.setPassword(encodedPassword);
-//        User saved = userRepository.save(user);
-        Organization created=organizationRepository.save(organization);
-        tenantService.initDatabase(organization.getName());
+    public ResponseEntity<?> saveOrganization(@RequestBody OrganizationDTO organizationDTO) {
+        Organization organization = organizationDTO.getOrganization();
+        Organization created = organizationRepository.save(organizationDTO.getOrganization());
+        List<User> usersList = organizationDTO.getUsersList();
+        if (!ObjectUtils.isEmpty(usersList)) {
+            usersList.forEach(user -> {
+                String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
+                user.setPassword(encodedPassword);
+                user.setOrganization(created);
+                userRepository.save(user);
+            });
+        }
+        tenantService.initDatabase(organizationDTO.getOrganization().getName());
         return ResponseEntity.ok(created);
     }
 }

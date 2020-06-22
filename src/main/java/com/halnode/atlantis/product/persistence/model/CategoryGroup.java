@@ -1,4 +1,4 @@
-package com.halnode.atlantis.core.persistence.model;
+package com.halnode.atlantis.product.persistence.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
@@ -8,19 +8,17 @@ import java.util.Set;
 
 @Entity
 @Data
-@Table(name = "organization")
-public class Organization {
-
+@Table(name = "test_category_group")
+public class CategoryGroup {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "org_id")
+    @Column(name = "group_id")
     private Long id;
 
+    @Column(unique = true)
     private String name;
 
-    @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "categoryGroup")
     @JsonIgnore
-    private Set<User> users;
-
-
+    private Set<Category> categories;
 }

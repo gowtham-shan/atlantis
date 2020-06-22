@@ -19,9 +19,6 @@ public class FlywayConfig {
                 .dataSource(dataSource)
                 .schemas(TenantIdentifierResolver.DEFAULT_TENANT)
                 .load();
-//        flyway.clean();
-//        flyway.repair();
-//        flyway.baseline();
         flyway.migrate();
 
         return flyway;
@@ -40,16 +37,5 @@ public class FlywayConfig {
                 flyway.migrate();
             });
         };
-//        return args -> {
-//            repository.findAll().forEach(user -> {
-//                String tenant = user.getUserName();
-//                Flyway flyway = Flyway.configure()
-//                        .locations("/db/migration/organizations")
-//                        .dataSource(dataSource)
-//                        .schemas(tenant)
-//                        .load();
-//                flyway.migrate();
-//            });
-//        };
     }
 }
