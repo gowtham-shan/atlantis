@@ -8,10 +8,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/users")
@@ -29,6 +26,11 @@ public class UserController {
 
     @NonNull
     private final TenantService tenantService;
+
+    @GetMapping
+    public ResponseEntity<?> getUsers(){
+        return ResponseEntity.ok(userRepository.findAll());
+    }
 
     @PostMapping
     public ResponseEntity<?> register(@RequestBody User user) {

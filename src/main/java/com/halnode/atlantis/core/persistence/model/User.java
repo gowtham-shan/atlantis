@@ -1,5 +1,6 @@
 package com.halnode.atlantis.core.persistence.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 import lombok.Generated;
 
@@ -18,4 +19,9 @@ public class User {
     private String userName;
 
     private String password;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "org_id")
+    private Organization organization;
+
 }

@@ -1,5 +1,6 @@
 package com.halnode.atlantis.spring;
 
+import com.halnode.atlantis.core.persistence.repository.OrganizationRepository;
 import com.halnode.atlantis.core.persistence.repository.UserRepository;
 import org.flywaydb.core.Flyway;
 import org.springframework.boot.CommandLineRunner;
@@ -27,17 +28,28 @@ public class FlywayConfig {
     }
 
     @Bean
-    CommandLineRunner commandLineRunner(UserRepository repository, DataSource dataSource) {
+    CommandLineRunner commandLineRunner(OrganizationRepository repository, DataSource dataSource) {
         return args -> {
-            repository.findAll().forEach(user -> {
-                String tenant = user.getUserName();
+            repository.findAll().forEach(organization -> {
+                String schema=organization.getName();
                 Flyway flyway = Flyway.configure()
                         .locations("/db/migration/organizations")
                         .dataSource(dataSource)
-                        .schemas(tenant)
+                        .schemas(schema)
                         .load();
                 flyway.migrate();
             });
         };
+//        return args -> {
+//            repository.findAll().forEach(user -> {
+//                String tenant = user.getUserName();
+//                Flyway flyway = Flyway.configure()
+//                        .locations("/db/migration/organizations")
+//                        .dataSource(dataSource)
+//                        .schemas(tenant)
+//                        .load();
+//                flyway.migrate();
+//            });
+//        };
     }
 }
