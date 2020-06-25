@@ -1,12 +1,14 @@
 package com.halnode.atlantis.core.persistence.model;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.Collection;
 
 @Entity
-@Data
+@Getter
+@Setter
 @Table(name = "auth_user")
 public class User {
     @Id
@@ -34,7 +36,7 @@ public class User {
     @Column(name = "mobile_number")
     private Long mobileNumber;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "org_id")
     private Organization organization;
 

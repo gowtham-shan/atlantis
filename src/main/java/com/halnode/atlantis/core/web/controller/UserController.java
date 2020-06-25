@@ -2,21 +2,18 @@ package com.halnode.atlantis.core.web.controller;
 
 import com.halnode.atlantis.core.persistence.model.User;
 import com.halnode.atlantis.core.persistence.repository.UserRepository;
-import com.halnode.atlantis.core.service.TenantService;
-import com.halnode.atlantis.core.service.UserDetailsServiceImpl;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/api/users")
 @RequiredArgsConstructor
 public class UserController {
-
-    @NonNull
-    private final UserDetailsServiceImpl userService;
 
     @NonNull
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -24,12 +21,21 @@ public class UserController {
     @NonNull
     private final UserRepository userRepository;
 
-    @NonNull
-    private final TenantService tenantService;
-
     @GetMapping
     public ResponseEntity<?> getUsers() {
-        return ResponseEntity.ok(userRepository.findAll());
+        try {
+            List<User> userList = userRepository.findAll();
+            return ResponseEntity.ok(userList);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println(e.getMessage());
+        }
+        return ResponseEntity.ok("Failed to fetch users");
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getUser(@PathVariable Long id) {
+        return ResponseEntity.ok(userRepository.findById(id));
     }
 
     @PostMapping
@@ -37,7 +43,6 @@ public class UserController {
         String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
         User saved = userRepository.save(user);
-        tenantService.initDatabase(user.getUserName());
         return ResponseEntity.ok(saved);
     }
 }

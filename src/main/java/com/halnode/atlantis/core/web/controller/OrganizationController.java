@@ -6,6 +6,7 @@ import com.halnode.atlantis.core.persistence.model.User;
 import com.halnode.atlantis.core.persistence.repository.OrganizationRepository;
 import com.halnode.atlantis.core.persistence.repository.UserRepository;
 import com.halnode.atlantis.core.service.TenantService;
+import com.halnode.atlantis.spring.SetupDataLoader;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +18,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/organization")
+@RequestMapping("/api/organization")
 @RequiredArgsConstructor
 public class OrganizationController {
 
@@ -41,6 +42,7 @@ public class OrganizationController {
     @PostMapping
     public ResponseEntity<?> saveOrganization(@RequestBody OrganizationDTO organizationDTO) {
         Organization organization = organizationDTO.getOrganization();
+
         Organization created = organizationRepository.save(organizationDTO.getOrganization());
         List<User> usersList = organizationDTO.getUsersList();
         if (!ObjectUtils.isEmpty(usersList)) {
@@ -48,6 +50,7 @@ public class OrganizationController {
                 String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
                 user.setPassword(encodedPassword);
                 user.setOrganization(created);
+                SetupDataLoader.organizationSchemaMap.put(user.getUserName(), created.getName());
                 userRepository.save(user);
             });
         }

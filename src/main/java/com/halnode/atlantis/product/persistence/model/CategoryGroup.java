@@ -8,7 +8,7 @@ import java.util.Set;
 
 @Entity
 @Data
-@Table(name = "test_category_group")
+@Table(name = "category_group")
 public class CategoryGroup {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

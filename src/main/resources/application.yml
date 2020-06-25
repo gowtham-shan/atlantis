@@ -13,13 +13,29 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     show-sql: true
   session:
-    store-type: jdbc
-    jdbc:
-      table-name: SPRING_SESSION
-      initialize-schema: always
+  #    jdbc:
+  #      table-name: SPRING_SESSION
+  #      initialize-schema: always
+#    store-type: jdbc
 logging:
   file:
     path: logs
+    max-size: 10MB
+
+server:
+  tomcat:
+    accesslog:
+      enabled: true
+      pattern: '%h %u %t %m %U %q %s'
+      max-days: 1
+      rename-on-rotate: true
+      prefix: access
+      directory: ../logs
+    basedir: web
+  http2:
+    enabled: true
+  compression:
+    enabled: true
 ---
 spring:
   profiles: development
@@ -30,6 +46,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: none
+    show-sql: true
   mustache:
     cache: false
   devtools:
@@ -43,4 +60,9 @@ spring:
   mustache:
     cache: false
   flyway:
+    enabled: true
     baseline-on-migrate: true
+  devtools:
+    livereload:
+      enabled: false
+---

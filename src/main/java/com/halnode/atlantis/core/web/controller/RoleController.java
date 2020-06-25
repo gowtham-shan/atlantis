@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/role")
+@RequestMapping("/api/role")
 @RequiredArgsConstructor
 public class RoleController {
 
@@ -19,7 +19,7 @@ public class RoleController {
     private final RoleRepository roleRepository;
 
     @GetMapping
-    public ResponseEntity<?> getRoles(){
+    public ResponseEntity<?> getRoles() {
         return ResponseEntity.ok(roleRepository.findAll());
     }
 
