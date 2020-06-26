@@ -9,7 +9,7 @@ import java.util.Set;
 
 @Data
 @Entity
-@Table(name = "role", uniqueConstraints = @UniqueConstraint(columnNames = "role_name"))
+@Table(name = "role", uniqueConstraints = @UniqueConstraint(columnNames = "role_name"), schema = "public")
 @AllArgsConstructor
 @NoArgsConstructor
 public class Role {
@@ -26,6 +26,6 @@ public class Role {
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "role_privileges",
             joinColumns = {@JoinColumn(name = "role_id")},
-            inverseJoinColumns = {@JoinColumn(name = "privilege_id")})
+            inverseJoinColumns = {@JoinColumn(name = "privilege_id")}, schema = "public")
     private Set<Privilege> privileges;
 }

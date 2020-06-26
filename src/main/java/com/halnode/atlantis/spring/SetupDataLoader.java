@@ -2,6 +2,7 @@ package com.halnode.atlantis.spring;
 
 import com.halnode.atlantis.core.persistence.model.User;
 import com.halnode.atlantis.core.persistence.repository.UserRepository;
+import com.halnode.atlantis.util.Constants;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationListener;
@@ -26,7 +27,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
     public void onApplicationEvent(ContextRefreshedEvent event) {
         List<User> users = userRepository.findAll();
         users.stream().filter(Objects::nonNull).forEach(user -> {
-            organizationSchemaMap.put(user.getUserName(), user.getOrganization().getName());
+            Constants.ORGANIZATION_SCHEMA_MAP.put(user.getUserName(), user.getOrganization().getName());
         });
     }
 }

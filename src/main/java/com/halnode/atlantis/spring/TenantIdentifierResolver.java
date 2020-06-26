@@ -1,6 +1,7 @@
 package com.halnode.atlantis.spring;
 
 
+import com.halnode.atlantis.util.Constants;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.context.spi.CurrentTenantIdentifierResolver;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -13,20 +14,18 @@ import org.springframework.util.ObjectUtils;
 @RequiredArgsConstructor
 public class TenantIdentifierResolver implements CurrentTenantIdentifierResolver {
 
-    static final String DEFAULT_TENANT = "public";
-
     @Override
     public String resolveCurrentTenantIdentifier() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (!ObjectUtils.isEmpty(auth)) {
             if (!(auth instanceof AnonymousAuthenticationToken)) {
                 String currentUserName = auth.getName();
-                return SetupDataLoader.organizationSchemaMap.get(currentUserName);
+                return Constants.ORGANIZATION_SCHEMA_MAP.get(currentUserName);
             }
-            return DEFAULT_TENANT;
+            return Constants.DEFAULT_TENANT;
         }
 
-        return DEFAULT_TENANT;
+        return Constants.DEFAULT_TENANT;
     }
 
     @Override

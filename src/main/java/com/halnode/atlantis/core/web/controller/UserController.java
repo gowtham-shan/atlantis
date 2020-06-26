@@ -2,13 +2,11 @@ package com.halnode.atlantis.core.web.controller;
 
 import com.halnode.atlantis.core.persistence.model.User;
 import com.halnode.atlantis.core.persistence.repository.UserRepository;
+import com.halnode.atlantis.core.service.UserService;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/users")
@@ -16,21 +14,14 @@ import java.util.List;
 public class UserController {
 
     @NonNull
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final UserRepository userRepository;
 
     @NonNull
-    private final UserRepository userRepository;
+    private final UserService userService;
 
     @GetMapping
     public ResponseEntity<?> getUsers() {
-        try {
-            List<User> userList = userRepository.findAll();
-            return ResponseEntity.ok(userList);
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println(e.getMessage());
-        }
-        return ResponseEntity.ok("Failed to fetch users");
+        return ResponseEntity.ok(userRepository.findAll());
     }
 
     @GetMapping("/{id}")
@@ -39,10 +30,12 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<?> register(@RequestBody User user) {
-        String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
-        user.setPassword(encodedPassword);
-        User saved = userRepository.save(user);
-        return ResponseEntity.ok(saved);
+    public ResponseEntity<?> saveUser(@RequestBody User user) {
+        return ResponseEntity.ok(userService.saveUser(user));
+    }
+
+    @PutMapping
+    public ResponseEntity<?> updateUser(@RequestBody User user) {
+        return ResponseEntity.ok(userRepository.save(user));
     }
 }

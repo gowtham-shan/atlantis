@@ -34,4 +34,9 @@ public class RoleController {
         Optional<Role> role = roleRepository.findById(id);
         return ResponseEntity.ok(role.get());
     }
+
+    @PutMapping
+    public ResponseEntity<?> updateRole(@RequestBody Role role) {
+        return ResponseEntity.ok(roleRepository.save(role));
+    }
 }

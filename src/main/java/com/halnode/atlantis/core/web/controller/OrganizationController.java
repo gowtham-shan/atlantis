@@ -2,19 +2,12 @@ package com.halnode.atlantis.core.web.controller;
 
 import com.halnode.atlantis.core.persistence.dto.OrganizationDTO;
 import com.halnode.atlantis.core.persistence.model.Organization;
-import com.halnode.atlantis.core.persistence.model.User;
 import com.halnode.atlantis.core.persistence.repository.OrganizationRepository;
-import com.halnode.atlantis.core.persistence.repository.UserRepository;
-import com.halnode.atlantis.core.service.TenantService;
-import com.halnode.atlantis.spring.SetupDataLoader;
+import com.halnode.atlantis.core.service.OrganizationService;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 
 @RestController
@@ -26,13 +19,7 @@ public class OrganizationController {
     private final OrganizationRepository organizationRepository;
 
     @NonNull
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
-
-    @NonNull
-    private final UserRepository userRepository;
-
-    @NonNull
-    private final TenantService tenantService;
+    private final OrganizationService organizationService;
 
     @GetMapping
     public ResponseEntity<?> getOrganizations() {
@@ -41,20 +28,17 @@ public class OrganizationController {
 
     @PostMapping
     public ResponseEntity<?> saveOrganization(@RequestBody OrganizationDTO organizationDTO) {
-        Organization organization = organizationDTO.getOrganization();
+        return ResponseEntity.ok(organizationService.saveOrganization(organizationDTO));
+    }
 
-        Organization created = organizationRepository.save(organizationDTO.getOrganization());
-        List<User> usersList = organizationDTO.getUsersList();
-        if (!ObjectUtils.isEmpty(usersList)) {
-            usersList.forEach(user -> {
-                String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
-                user.setPassword(encodedPassword);
-                user.setOrganization(created);
-                SetupDataLoader.organizationSchemaMap.put(user.getUserName(), created.getName());
-                userRepository.save(user);
-            });
-        }
-        tenantService.initDatabase(organizationDTO.getOrganization().getName());
-        return ResponseEntity.ok(created);
+    @PutMapping
+    public ResponseEntity<?> updateOrganization(@RequestBody Organization organization) {
+        return ResponseEntity.ok(organizationRepository.save(organization));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteOrganization(@PathVariable Long id) {
+        organizationRepository.deleteById(id);
+        return ResponseEntity.ok().build();
     }
 }

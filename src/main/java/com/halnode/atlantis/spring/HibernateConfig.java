@@ -41,4 +41,6 @@ public class HibernateConfig {
 
         return em;
     }
+
+    
 }

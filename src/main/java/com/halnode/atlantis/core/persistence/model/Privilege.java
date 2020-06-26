@@ -8,7 +8,7 @@ import javax.persistence.*;
 
 @Entity
 @Data
-@Table(name = "privilege")
+@Table(name = "privilege", schema = "public")
 @AllArgsConstructor
 @NoArgsConstructor
 public class Privilege {

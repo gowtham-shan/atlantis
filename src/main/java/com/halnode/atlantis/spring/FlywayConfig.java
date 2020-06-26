@@ -1,7 +1,7 @@
 package com.halnode.atlantis.spring;
 
 import com.halnode.atlantis.core.persistence.repository.OrganizationRepository;
-import com.halnode.atlantis.core.persistence.repository.UserRepository;
+import com.halnode.atlantis.util.Constants;
 import org.flywaydb.core.Flyway;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -17,7 +17,7 @@ public class FlywayConfig {
         Flyway flyway = Flyway.configure()
                 .locations("db/migration/public")
                 .dataSource(dataSource)
-                .schemas(TenantIdentifierResolver.DEFAULT_TENANT)
+                .schemas(Constants.DEFAULT_TENANT)
                 .load();
         flyway.migrate();
 
@@ -28,7 +28,7 @@ public class FlywayConfig {
     CommandLineRunner commandLineRunner(OrganizationRepository repository, DataSource dataSource) {
         return args -> {
             repository.findAll().forEach(organization -> {
-                String schema=organization.getName();
+                String schema = organization.getName();
                 Flyway flyway = Flyway.configure()
                         .locations("/db/migration/organizations")
                         .dataSource(dataSource)

@@ -1,4 +1,4 @@
-package com.halnode.atlantis.core.service;
+package com.halnode.atlantis.spring;
 
 import com.halnode.atlantis.core.persistence.model.User;
 import com.halnode.atlantis.core.persistence.repository.UserRepository;

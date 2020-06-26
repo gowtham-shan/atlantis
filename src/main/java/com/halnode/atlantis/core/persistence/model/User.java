@@ -9,7 +9,7 @@ import java.util.Collection;
 @Entity
 @Getter
 @Setter
-@Table(name = "auth_user")
+@Table(name = "auth_user", schema = "public")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -44,7 +44,7 @@ public class User {
     @JoinTable(
             name = "user_groups",
             joinColumns = {@JoinColumn(name = "user_id")},
-            inverseJoinColumns = {@JoinColumn(name = "group_id")})
+            inverseJoinColumns = {@JoinColumn(name = "group_id")}, schema = "public")
     private Collection<Group> groups;
 
     private boolean active;

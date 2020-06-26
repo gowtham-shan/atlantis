@@ -17,6 +17,7 @@ spring:
   #      table-name: SPRING_SESSION
   #      initialize-schema: always
 #    store-type: jdbc
+
 logging:
   file:
     path: logs

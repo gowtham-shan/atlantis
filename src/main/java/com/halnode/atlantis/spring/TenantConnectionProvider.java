@@ -1,5 +1,6 @@
 package com.halnode.atlantis.spring;
 
+import com.halnode.atlantis.util.Constants;
 import org.hibernate.engine.jdbc.connections.spi.MultiTenantConnectionProvider;
 import org.springframework.stereotype.Component;
 
@@ -8,7 +9,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 @Component
-public class TenantConnectionProvider  implements MultiTenantConnectionProvider {
+public class TenantConnectionProvider implements MultiTenantConnectionProvider {
 
     private DataSource datasource;
 
@@ -37,7 +38,7 @@ public class TenantConnectionProvider  implements MultiTenantConnectionProvider 
     @Override
     public void releaseConnection(String tenantIdentifier, Connection connection) throws SQLException {
         connection.createStatement()
-                .execute(String.format("SET SCHEMA \'%s\';", TenantIdentifierResolver.DEFAULT_TENANT));
+                .execute(String.format("SET SCHEMA \'%s\';", Constants.DEFAULT_TENANT));
         releaseAnyConnection(connection);
     }
 
