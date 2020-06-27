@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.util.Set;
 
+
 @Data
 @Entity
 @Table(name = "role", uniqueConstraints = @UniqueConstraint(columnNames = "role_name"), schema = "public")

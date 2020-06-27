@@ -12,12 +12,11 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     show-sql: true
-  session:
-  #    jdbc:
-  #      table-name: SPRING_SESSION
-  #      initialize-schema: always
-#    store-type: jdbc
-
+    properties:
+      org:
+        hibernate:
+          envers:
+            audit_strategy: org.hibernate.envers.strategy.ValidityAuditStrategy
 logging:
   file:
     path: logs
@@ -54,7 +53,7 @@ spring:
     livereload:
       enabled: true
   flyway:
-    enabled: true
+    enabled: false
 ---
 spring:
   profiles: production

@@ -2,6 +2,8 @@ package com.halnode.atlantis.core.persistence.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.NotAudited;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -9,6 +11,7 @@ import java.util.Set;
 @Entity
 @Data
 @Table(name = "organization", schema = "public")
+@Audited
 public class Organization {
 
     @Id
@@ -20,6 +23,8 @@ public class Organization {
 
     @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
+    @NotAudited
+    
     private Set<User> users;
 
 

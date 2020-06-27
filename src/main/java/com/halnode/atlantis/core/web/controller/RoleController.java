@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
 @RestController
@@ -19,7 +20,8 @@ public class RoleController {
     private final RoleRepository roleRepository;
 
     @GetMapping
-    public ResponseEntity<?> getRoles() {
+    public ResponseEntity<?> getRoles(HttpServletRequest request) {
+        System.out.println(request.getSession().getId() + request.getSession().getAttributeNames());
         return ResponseEntity.ok(roleRepository.findAll());
     }
 
