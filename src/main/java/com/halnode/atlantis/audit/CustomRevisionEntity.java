@@ -1,4 +1,4 @@
-package com.halnode.atlantis.audit.persistence.model;
+package com.halnode.atlantis.audit;
 
 import lombok.Data;
 import org.hibernate.envers.RevisionEntity;
@@ -8,7 +8,7 @@ import org.hibernate.envers.RevisionTimestamp;
 import javax.persistence.*;
 
 @Entity
-@RevisionEntity(MyRevisionListener.class)
+@RevisionEntity(CustomRevisionListener.class)
 @Data
 @Table(name = "custom_rev_info", schema = "public")
 public class CustomRevisionEntity {

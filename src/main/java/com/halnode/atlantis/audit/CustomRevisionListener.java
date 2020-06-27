@@ -1,4 +1,4 @@
-package com.halnode.atlantis.audit.persistence.model;
+package com.halnode.atlantis.audit;
 
 import com.halnode.atlantis.util.Constants;
 import org.hibernate.envers.RevisionListener;
@@ -8,8 +8,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.util.ObjectUtils;
 
-public class MyRevisionListener implements RevisionListener {
-    
+public class CustomRevisionListener implements RevisionListener {
+
     @Override
     public void newRevision(Object revisionEntity) {
         CustomRevisionEntity revision = (CustomRevisionEntity) revisionEntity;

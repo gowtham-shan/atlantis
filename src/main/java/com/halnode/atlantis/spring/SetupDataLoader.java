@@ -25,6 +25,10 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
+        /*
+            Load all organization names in the  ORGANIZATION_SCHEMA_MAP
+            which will be later used to get and set the schema name while running organization specific queries
+         */
         List<User> users = userRepository.findAll();
         users.stream().filter(Objects::nonNull).forEach(user -> {
             Constants.ORGANIZATION_SCHEMA_MAP.put(user.getUserName(), user.getOrganization().getName());

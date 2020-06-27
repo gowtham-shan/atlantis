@@ -16,6 +16,11 @@ import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Configuration class which defines properties and configurations needed for enabling SCHEMA BASED MULTI TENANCY
+ *
+ * @author Gowtham
+ */
 @Configuration
 public class HibernateConfig {
 
@@ -42,5 +47,5 @@ public class HibernateConfig {
         return em;
     }
 
-    
+
 }

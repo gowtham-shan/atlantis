@@ -26,6 +26,11 @@ public class OrganizationService {
     @NonNull
     private final UserService userService;
 
+    /**
+     * Apply migration scripts for newly created organization
+     *
+     * @param schema
+     */
     public void initDatabase(String schema) {
         Flyway flyway = Flyway.configure()
                 .locations("db/migration/organizations")
