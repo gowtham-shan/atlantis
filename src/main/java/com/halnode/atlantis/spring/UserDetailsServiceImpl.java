@@ -28,8 +28,13 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = null;
+        if (username.matches("[0-9]+")) {
+            user = userRepository.findByMobileNumber(Long.valueOf(username));
+        } else {
+            user = userRepository.findByUserName(username);
+        }
 
-        User user = userRepository.findByUserName(username);
         if (ObjectUtils.isEmpty(user)) throw new UsernameNotFoundException(username);
 
         Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
@@ -44,6 +49,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         privileges.stream().filter(Objects::nonNull).forEach(privilege -> {
             grantedAuthorities.add(new SimpleGrantedAuthority(privilege.getName()));
         });
-        return new org.springframework.security.core.userdetails.User(user.getUserName(), user.getPassword(), grantedAuthorities);
+        return new org.springframework.security.core.userdetails.User(String.valueOf(user.getMobileNumber()), user.getPassword(), grantedAuthorities);
     }
 }

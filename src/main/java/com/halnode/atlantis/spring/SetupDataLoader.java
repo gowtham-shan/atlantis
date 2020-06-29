@@ -37,7 +37,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
          */
         List<User> users = userRepository.findAll();
         users.stream().filter(Objects::nonNull).forEach(user -> {
-            Constants.ORGANIZATION_SCHEMA_MAP.put(user.getUserName(), user.getOrganization().getName());
+            Constants.ORGANIZATION_SCHEMA_MAP.put(user.getMobileNumber(), user.getOrganization().getName());
         });
 
         Organization organization = new Organization();

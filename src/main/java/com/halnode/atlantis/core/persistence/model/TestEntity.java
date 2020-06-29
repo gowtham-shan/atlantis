@@ -17,9 +17,9 @@ import javax.persistence.*;
 @Table(name = "test_entity")
 public class TestEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "test")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "test_sequence")
     @GenericGenerator(
-            name = "test",
+            name = "test_sequence",
             strategy = "com.halnode.atlantis.util.StringPrefixedIdGenerator",
             parameters = {
                     @Parameter(name = StringPrefixedIdGenerator.INCREMENT_PARAM, value = "1"),

@@ -20,7 +20,7 @@ public class TenantIdentifierResolver implements CurrentTenantIdentifierResolver
         if (!ObjectUtils.isEmpty(auth)) {
             if (!(auth instanceof AnonymousAuthenticationToken)) {
                 String currentUserName = auth.getName();
-                return Constants.ORGANIZATION_SCHEMA_MAP.get(currentUserName);
+                return Constants.ORGANIZATION_SCHEMA_MAP.get(Long.valueOf(currentUserName));
             }
             return Constants.DEFAULT_TENANT;
         }

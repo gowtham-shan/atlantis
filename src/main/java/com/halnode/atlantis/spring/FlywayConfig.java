@@ -25,6 +25,7 @@ public class FlywayConfig {
                 .dataSource(dataSource)
                 .schemas(Constants.DEFAULT_TENANT)
                 .load();
+        flyway.clean();
         flyway.migrate();
 
         return flyway;

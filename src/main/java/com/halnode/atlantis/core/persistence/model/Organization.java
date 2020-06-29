@@ -24,7 +24,6 @@ public class Organization {
     @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
     @NotAudited
-    
     private Set<User> users;
 
 

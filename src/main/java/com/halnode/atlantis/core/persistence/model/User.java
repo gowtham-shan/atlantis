@@ -30,11 +30,11 @@ public class User {
     @Column(name = "last_name")
     private String lastName;
 
-    @Column(name = "country_code")
-    private String countryCode;
-
     @Column(name = "mobile_number")
     private Long mobileNumber;
+
+    @Column(name = "country_code")
+    private String countryCode;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "org_id")
@@ -48,4 +48,7 @@ public class User {
     private Collection<Group> groups;
 
     private boolean active;
+
+    @Column(name = "is_admin")
+    private boolean isAdmin;
 }
