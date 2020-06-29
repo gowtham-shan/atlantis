@@ -81,3 +81,12 @@ CREATE TABLE IF NOT EXISTS organization_aud
     PRIMARY KEY (org_id, rev),
     CONSTRAINT fk_revision FOREIGN KEY (REV) REFERENCES custom_rev_info (id)
 );
+
+-- Temporary table for custom id generation example --
+CREATE TABLE IF NOT EXISTS test_entity
+(
+    id     varchar primary key,
+    name   varchar,
+    org_id bigint,
+    constraint fk_organization foreign key (org_id) references organization (org_id)
+);

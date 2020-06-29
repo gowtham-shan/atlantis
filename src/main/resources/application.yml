@@ -53,14 +53,14 @@ spring:
     livereload:
       enabled: true
   flyway:
-    enabled: false
+    enabled: true
 ---
 spring:
   profiles: production
   mustache:
     cache: false
   flyway:
-    enabled: true
+    enabled: false
     baseline-on-migrate: true
   devtools:
     livereload:

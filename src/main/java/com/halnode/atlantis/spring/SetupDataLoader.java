@@ -1,6 +1,10 @@
 package com.halnode.atlantis.spring;
 
+import com.halnode.atlantis.core.persistence.model.Organization;
+import com.halnode.atlantis.core.persistence.model.TestEntity;
 import com.halnode.atlantis.core.persistence.model.User;
+import com.halnode.atlantis.core.persistence.repository.OrganizationRepository;
+import com.halnode.atlantis.core.persistence.repository.TestEntityRepository;
 import com.halnode.atlantis.core.persistence.repository.UserRepository;
 import com.halnode.atlantis.util.Constants;
 import lombok.NonNull;
@@ -9,9 +13,7 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 @Component
@@ -21,7 +23,11 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
     @NonNull
     private final UserRepository userRepository;
 
-    public static final Map<String, String> organizationSchemaMap = new HashMap<>();
+    @NonNull
+    private final OrganizationRepository organizationRepository;
+
+    @NonNull
+    private final TestEntityRepository testEntityRepository;
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
@@ -33,5 +39,13 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         users.stream().filter(Objects::nonNull).forEach(user -> {
             Constants.ORGANIZATION_SCHEMA_MAP.put(user.getUserName(), user.getOrganization().getName());
         });
+
+        Organization organization = new Organization();
+        organization.setName("ORG_ONE");
+        organizationRepository.save(organization);
+        TestEntity testEntity = new TestEntity();
+        testEntity.setName("One");
+        testEntity.setOrganization(organization);
+        testEntityRepository.save(testEntity);
     }
 }
