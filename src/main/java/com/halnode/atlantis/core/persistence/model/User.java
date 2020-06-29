@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.Collection;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -40,12 +40,12 @@ public class User {
     @JoinColumn(name = "org_id")
     private Organization organization;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
-            name = "user_groups",
+            name = "auth_user_roles",
             joinColumns = {@JoinColumn(name = "user_id")},
-            inverseJoinColumns = {@JoinColumn(name = "group_id")}, schema = "public")
-    private Collection<Group> groups;
+            inverseJoinColumns = {@JoinColumn(name = "role_id")}, schema = "public")
+    private Set<Role> roles;
 
     private boolean active;
 

@@ -1,7 +1,6 @@
 package com.halnode.atlantis.spring;
 
 import com.halnode.atlantis.core.persistence.repository.OrganizationRepository;
-import com.halnode.atlantis.util.Constants;
 import org.flywaydb.core.Flyway;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -17,19 +16,6 @@ import javax.sql.DataSource;
 
 @Configuration
 public class FlywayConfig {
-
-    @Bean
-    public Flyway flyway(DataSource dataSource) {
-        Flyway flyway = Flyway.configure()
-                .locations("db/migration/public")
-                .dataSource(dataSource)
-                .schemas(Constants.DEFAULT_TENANT)
-                .load();
-        flyway.clean();
-        flyway.migrate();
-
-        return flyway;
-    }
 
     @Bean
     CommandLineRunner commandLineRunner(OrganizationRepository repository, DataSource dataSource) {
