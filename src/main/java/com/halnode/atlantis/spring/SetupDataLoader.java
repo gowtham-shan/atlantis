@@ -42,6 +42,8 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
 
         Organization organization = new Organization();
         organization.setName("ORG_ONE");
+        testEntityRepository.deleteAll();
+        organizationRepository.deleteAll();
         organizationRepository.save(organization);
         TestEntity testEntity = new TestEntity();
         testEntity.setName("One");
