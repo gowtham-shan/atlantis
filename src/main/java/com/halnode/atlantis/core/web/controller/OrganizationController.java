@@ -20,7 +20,7 @@ public class OrganizationController {
 
     @NonNull
     private final OrganizationService organizationService;
-
+    
     @GetMapping
     public ResponseEntity<?> getOrganizations() {
         return ResponseEntity.ok(organizationRepository.findAll());

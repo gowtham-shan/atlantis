@@ -1,0 +1,22 @@
+package com.halnode.atlantis.spring;
+
+import com.halnode.atlantis.core.constants.ErrorResponse;
+import com.halnode.atlantis.core.exception.ResourceNotFoundException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+
+import java.time.LocalDateTime;
+
+@ControllerAdvice
+public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public final ResponseEntity<?> handleResourceNotFoundException(ResourceNotFoundException exception) {
+        ErrorResponse errorResponse = new ErrorResponse(exception.getMessage(), LocalDateTime.now());
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    }
+
+}
