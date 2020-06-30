@@ -76,4 +76,4 @@ CREATE TABLE IF NOT EXISTS test_entity
     constraint fk_organization foreign key (org_id) references organization (org_id)
 );
 
--- CREATE SEQUENCE test_sequence;
+CREATE SEQUENCE test_sequence;
