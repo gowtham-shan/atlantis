@@ -8,7 +8,7 @@ import java.util.Set;
 
 @Entity
 @Data
-@Table(name = "category_group")
+@Table(name = "category_group", uniqueConstraints = {@UniqueConstraint(columnNames = "name")})
 public class CategoryGroup {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -6,7 +6,7 @@ import javax.persistence.*;
 
 @Entity
 @Data
-@Table(name = "category")
+@Table(name = "category", uniqueConstraints = {@UniqueConstraint(columnNames = "name")})
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

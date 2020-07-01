@@ -10,6 +10,13 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import java.time.LocalDateTime;
 
+/**
+ * This class acts as an Exception Handler to the entire application.
+ * We can catch any exception and send our custom response {@link ErrorResponse}.
+ * We can also handle our Custom Exception via this class.
+ *
+ * @author gowtham
+ */
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 

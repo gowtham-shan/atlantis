@@ -10,7 +10,7 @@ import java.util.Set;
 
 @Entity
 @Data
-@Table(name = "organization", schema = "public")
+@Table(name = "organization", schema = "public", uniqueConstraints = {@UniqueConstraint(columnNames = "name")})
 @Audited
 public class Organization {
 

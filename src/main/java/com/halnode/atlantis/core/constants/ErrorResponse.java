@@ -7,6 +7,11 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 
+/**
+ * Generic class for sending error messages when exception occurred
+ *
+ * @author gowtham
+ */
 @Getter
 @Setter
 @AllArgsConstructor

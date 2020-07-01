@@ -9,7 +9,11 @@ import java.util.Set;
 @Entity
 @Getter
 @Setter
-@Table(name = "auth_user", schema = "public")
+@Table(name = "auth_user", schema = "public", uniqueConstraints = {
+        @UniqueConstraint(columnNames = "user_name"),
+        @UniqueConstraint(columnNames = "mobile_number"),
+        @UniqueConstraint(columnNames = "email")
+})
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,8 +34,11 @@ public class User {
     @Column(name = "last_name")
     private String lastName;
 
+    // mobile number is used as username by spring security
     @Column(name = "mobile_number")
     private Long mobileNumber;
+
+    private String email;
 
     @Column(name = "country_code")
     private String countryCode;

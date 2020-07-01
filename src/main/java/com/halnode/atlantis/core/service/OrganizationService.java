@@ -44,7 +44,7 @@ public class OrganizationService {
         Organization created = organizationRepository.save(organizationDTO.getOrganization());
         List<User> usersList = organizationDTO.getUsersList();
         if (!ObjectUtils.isEmpty(usersList)) {
-            userService.saveUsers(usersList, created);
+            userService.saveUsers(usersList, created, true);
         }
         this.initDatabase(created.getName());
         return created;

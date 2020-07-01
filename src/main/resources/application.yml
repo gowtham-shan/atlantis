@@ -58,6 +58,8 @@ spring:
   flyway:
     enabled: true
     clean-disabled: false
+setup:
+  insert-sample-data: true
 ---
 spring:
   profiles: production

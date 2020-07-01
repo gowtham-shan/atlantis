@@ -13,6 +13,7 @@ CREATE TABLE IF NOT EXISTS auth_user
     last_name     VARCHAR(30),
     country_code  VARCHAR,
     mobile_number BIGINT UNIQUE NOT NULL,
+    email         VARCHAR UNIQUE,
     active        boolean,
     is_admin      boolean,
     org_id        BIGINT,
@@ -76,4 +77,4 @@ CREATE TABLE IF NOT EXISTS test_entity
     constraint fk_organization foreign key (org_id) references organization (org_id)
 );
 
-CREATE SEQUENCE test_sequence;
+CREATE SEQUENCE IF NOT EXISTS test_sequence;
