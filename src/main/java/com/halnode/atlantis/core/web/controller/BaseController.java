@@ -36,7 +36,7 @@ public class BaseController {
         return "landing";
     }
 
-    @PostMapping("/authenticate")
+    @PostMapping("authenticate")
     public ResponseEntity<?> authentication(@RequestBody JwtRequest jwtRequest) {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(jwtRequest.getUserName(), jwtRequest.getPassword()));

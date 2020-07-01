@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 @RestController
-@RequestMapping("/api/organization")
+@RequestMapping("/admin/organization")
 @RequiredArgsConstructor
 public class OrganizationController {
 
@@ -20,7 +20,7 @@ public class OrganizationController {
 
     @NonNull
     private final OrganizationService organizationService;
-    
+
     @GetMapping
     public ResponseEntity<?> getOrganizations() {
         return ResponseEntity.ok(organizationRepository.findAll());

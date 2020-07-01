@@ -71,10 +71,10 @@ CREATE TABLE IF NOT EXISTS organization_aud
 -- Temporary table for custom id generation example --
 CREATE TABLE IF NOT EXISTS test_entity
 (
-    id     varchar primary key,
-    name   varchar,
-    org_id bigint,
-    constraint fk_organization foreign key (org_id) references organization (org_id)
+    id     VARCHAR PRIMARY KEY,
+    name   VARCHAR,
+    org_id BIGINT,
+    CONSTRAINT fk_organization FOREIGN KEY (org_id) REFERENCES organization (org_id)
 );
 
 CREATE SEQUENCE IF NOT EXISTS test_sequence;

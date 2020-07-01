@@ -51,22 +51,15 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
     public void onApplicationEvent(ContextRefreshedEvent event) {
 
         if (insertData) {
-
             // create initial privileges
-
             createPrivilegeIfNotFound("READ_PRIVILEGE");
             createPrivilegeIfNotFound("WRITE_PRIVILEGE");
-
             // create initial roles
-
             createRoleIfNotFound("ROLE_ADMIN");
-
             // create initial user
             createUserIfNotFound();
-
             // create initial organization
             createOrganizationIfNotFound();
-
             // Map user to the organization
             MapToOrganization();
         }
@@ -83,7 +76,6 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
                 }
             });
         }
-
     }
 
     @Transactional
