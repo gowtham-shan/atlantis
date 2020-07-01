@@ -23,7 +23,7 @@ public class OrganizationController {
 
     @GetMapping
     public ResponseEntity<?> getOrganizations() {
-        return ResponseEntity.ok(organizationRepository.findAll());
+        return ResponseEntity.ok(organizationService.getOrganizations());
     }
 
     @PostMapping

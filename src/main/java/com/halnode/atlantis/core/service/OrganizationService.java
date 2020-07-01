@@ -26,6 +26,10 @@ public class OrganizationService {
     @NonNull
     private final UserService userService;
 
+    public List<Organization> getOrganizations() {
+        return organizationRepository.findAll();
+    }
+
     /**
      * Apply migration scripts for newly created organization
      *

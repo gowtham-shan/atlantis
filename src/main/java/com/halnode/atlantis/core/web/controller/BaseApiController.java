@@ -12,9 +12,4 @@ public class BaseApiController {
     public String welcome() {
         return "API CONTROLLER FOR JWT AUTHENTICATION";
     }
-
-    @GetMapping("/get")
-    public String securityCheck() {
-        return "Checked";
-    }
 }

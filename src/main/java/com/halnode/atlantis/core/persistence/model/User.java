@@ -47,7 +47,7 @@ public class User {
     @JoinColumn(name = "org_id")
     private Organization organization;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
             name = "auth_user_roles",
             joinColumns = {@JoinColumn(name = "user_id")},

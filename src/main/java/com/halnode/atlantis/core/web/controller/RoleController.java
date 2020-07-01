@@ -2,6 +2,7 @@ package com.halnode.atlantis.core.web.controller;
 
 import com.halnode.atlantis.core.persistence.model.Role;
 import com.halnode.atlantis.core.persistence.repository.RoleRepository;
+import com.halnode.atlantis.core.service.RoleService;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,10 +20,12 @@ public class RoleController {
     @NonNull
     private final RoleRepository roleRepository;
 
+    @NonNull
+    private final RoleService roleService;
+
     @GetMapping
     public ResponseEntity<?> getRoles(HttpServletRequest request) {
-        System.out.println(request.getSession().getId() + request.getSession().getAttributeNames());
-        return ResponseEntity.ok(roleRepository.findAll());
+        return ResponseEntity.ok(roleService.getRoles());
     }
 
     @PostMapping

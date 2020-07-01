@@ -21,12 +21,12 @@ public class UserController {
 
     @GetMapping
     public ResponseEntity<?> getUsers() {
-        return ResponseEntity.ok(userRepository.findAll());
+        return ResponseEntity.ok(userService.getUsers());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getUser(@PathVariable Long id) {
-        return ResponseEntity.ok(userRepository.findById(id));
+        return ResponseEntity.ok(userService.getUserById(id));
     }
 
     @PostMapping
@@ -34,8 +34,9 @@ public class UserController {
         return ResponseEntity.ok(userService.saveUser(user));
     }
 
+    //TODO: proper update should be implemented
     @PutMapping
     public ResponseEntity<?> updateUser(@RequestBody User user) {
-        return ResponseEntity.ok(userRepository.save(user));
+        return ResponseEntity.ok(userService.saveUser(user));
     }
 }

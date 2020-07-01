@@ -12,10 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -30,7 +27,20 @@ public class UserService {
     @NonNull
     private final RoleRepository roleRepository;
 
-    public Set<Role> createInitialRole() {
+    public List<User> getUsers() {
+        return userRepository.findAll();
+    }
+
+    public User getUserById(Long id) {
+        Optional<User> userOptional = userRepository.findById(id);
+        if (userOptional.isPresent()) {
+            return userOptional.get();
+        }
+        //TODO: Throw proper exception instead of null
+        return null;
+    }
+
+    public Set<Role> createAdminRole() {
         Role role = roleRepository.findByName("ROLE_ADMIN");
         if (role == null) {
             role = new Role();
@@ -43,6 +53,7 @@ public class UserService {
     public User saveUser(User user) {
         String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
+        //TODO:Have to write logic for saving users with existing roles and privileges
         return userRepository.save(user);
     }
 
@@ -52,7 +63,7 @@ public class UserService {
             user.setPassword(encodedPassword);
             user.setOrganization(organization);
             if (firstUser && ObjectUtils.isEmpty(user.getRoles())) {
-                user.setRoles(createInitialRole());
+                user.setRoles(createAdminRole());
             }
             Constants.ORGANIZATION_SCHEMA_MAP.put(user.getMobileNumber(), user.getOrganization().getName());
         });
