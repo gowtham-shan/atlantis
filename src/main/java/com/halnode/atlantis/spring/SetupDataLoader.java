@@ -135,6 +135,9 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         User user = userRepository.findByUserName("test");
         user.setRoles(new HashSet<>(Arrays.asList(role)));
         user.setOrganization(organization);
+        user.setActive(true);
+        user.setIsAdmin(true);
         userRepository.save(user);
+        Constants.ORGANIZATION_SCHEMA_MAP.put(Long.valueOf(user.getMobileNumber()), organization.getName());
     }
 }

@@ -12,6 +12,7 @@ import org.springframework.util.ObjectUtils;
 
 import javax.sql.DataSource;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -46,7 +47,7 @@ public class OrganizationService {
 
     public Organization saveOrganization(OrganizationDTO organizationDTO) {
         Organization created = organizationRepository.save(organizationDTO.getOrganization());
-        List<User> usersList = organizationDTO.getUsersList();
+        Set<User> usersList = organizationDTO.getUsers();
         if (!ObjectUtils.isEmpty(usersList)) {
             userService.saveUsers(usersList, created, true);
         }

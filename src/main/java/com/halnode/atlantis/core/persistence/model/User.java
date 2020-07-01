@@ -43,11 +43,11 @@ public class User {
     @Column(name = "country_code")
     private String countryCode;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     @JoinColumn(name = "org_id")
     private Organization organization;
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToMany(cascade = {CascadeType.MERGE})
     @JoinTable(
             name = "auth_user_roles",
             joinColumns = {@JoinColumn(name = "user_id")},
@@ -57,5 +57,5 @@ public class User {
     private boolean active;
 
     @Column(name = "is_admin")
-    private boolean isAdmin;
+    private Boolean isAdmin;
 }

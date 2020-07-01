@@ -67,9 +67,10 @@ public class SecurityConfig {
         protected void configure(HttpSecurity http) throws Exception {
             http
                     .csrf().disable()
-                    .antMatcher("/api/**")
                     .authorizeRequests()
-                    .antMatchers("/authenticate").permitAll()
+                    .antMatchers(HttpMethod.POST, "/admin/organization").permitAll()
+                    .antMatchers("/admin/**").hasRole("ADMIN")
+                    .antMatchers("/", "/authenticate").permitAll()
                     .anyRequest().authenticated()
                     .and()
                     .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)

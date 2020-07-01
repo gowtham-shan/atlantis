@@ -5,11 +5,11 @@ import com.halnode.atlantis.core.persistence.model.User;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
 public class OrganizationDTO {
     private Organization organization;
-    private List<User> usersList;
+    private Set<User> users;
 }

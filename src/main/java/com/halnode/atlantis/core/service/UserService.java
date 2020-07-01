@@ -53,18 +53,23 @@ public class UserService {
     public User saveUser(User user) {
         String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
+        if (user.getIsAdmin()) {
+            user.setRoles(createAdminRole());
+        }
         //TODO:Have to write logic for saving users with existing roles and privileges
         return userRepository.save(user);
     }
 
-    public void saveUsers(List<User> users, Organization organization, boolean firstUser) {
+    public void saveUsers(Set<User> users, Organization organization, boolean firstUser) {
         users.forEach(user -> {
             String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
             user.setPassword(encodedPassword);
             user.setOrganization(organization);
             if (firstUser && ObjectUtils.isEmpty(user.getRoles())) {
                 user.setRoles(createAdminRole());
+                user.setIsAdmin(true);
             }
+            user.setActive(true);
             Constants.ORGANIZATION_SCHEMA_MAP.put(user.getMobileNumber(), user.getOrganization().getName());
         });
         userRepository.saveAll(users);
