@@ -40,6 +40,8 @@ server:
     enabled: true
   compression:
     enabled: true
+  servlet:
+    context-path: /api
 ---
 spring:
   profiles: development
