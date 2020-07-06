@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/admin/role")
+@RequestMapping("/api/admin/role")
 @RequiredArgsConstructor
 public class RoleController {
 

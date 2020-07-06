@@ -40,8 +40,6 @@ server:
     enabled: true
   compression:
     enabled: true
-  servlet:
-    context-path: /api
 ---
 spring:
   profiles: development
@@ -65,7 +63,7 @@ spring:
     clean-disabled: false
 # User Defined Application properties
 setup:
-  insert-sample-data: true
+  insert-sample-data: false
 ---
 spring:
   profiles: production

@@ -9,7 +9,7 @@ import java.util.Set;
 @Entity
 @Getter
 @Setter
-@Table(name = "auth_user", schema = "public", uniqueConstraints = {
+@Table(name = "auth_user", uniqueConstraints = {
         @UniqueConstraint(columnNames = "user_name"),
         @UniqueConstraint(columnNames = "mobile_number"),
         @UniqueConstraint(columnNames = "email")
@@ -47,11 +47,11 @@ public class User {
     @JoinColumn(name = "org_id")
     private Organization organization;
 
-    @ManyToMany(cascade = {CascadeType.MERGE})
+    @ManyToMany(cascade = {CascadeType.MERGE}, fetch = FetchType.EAGER)
     @JoinTable(
             name = "auth_user_roles",
             joinColumns = {@JoinColumn(name = "user_id")},
-            inverseJoinColumns = {@JoinColumn(name = "role_id")}, schema = "public")
+            inverseJoinColumns = {@JoinColumn(name = "role_id")})
     private Set<Role> roles;
 
     private boolean active;

@@ -12,6 +12,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Query;
+import javax.transaction.Transactional;
 import java.util.*;
 
 @Service
@@ -26,6 +30,9 @@ public class UserService {
 
     @NonNull
     private final RoleRepository roleRepository;
+
+    @NonNull
+    private final EntityManagerFactory entityManagerFactory;
 
     public List<User> getUsers() {
         return userRepository.findAll();
@@ -50,28 +57,61 @@ public class UserService {
         return new HashSet<>(Arrays.asList(role));
     }
 
+    public Role getAdminRole() {
+        Role role = new Role();
+        role.setName("ROLE_ADMIN");
+        return role;
+    }
+
+    @Transactional
     public User saveUser(User user) {
         String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
-        if (user.getIsAdmin()) {
-            user.setRoles(createAdminRole());
-        }
-        //TODO:Have to write logic for saving users with existing roles and privileges
-        return userRepository.save(user);
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        Query query;
+        entityManager.getTransaction().begin();
+        query = entityManager.createNativeQuery(String.format("SET SCHEMA \'%s\';", user.getOrganization().getName()));
+        query.executeUpdate();
+        entityManager.persist(user);
+        entityManager.getTransaction().commit();
+        Constants.ORGANIZATION_SCHEMA_MAP.put(user.getMobileNumber(), user.getOrganization().getName());
+        return user;
     }
 
-    public void saveUsers(Set<User> users, Organization organization, boolean firstUser) {
-        users.forEach(user -> {
-            String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
-            user.setPassword(encodedPassword);
-            user.setOrganization(organization);
-            if (firstUser && ObjectUtils.isEmpty(user.getRoles())) {
-                user.setRoles(createAdminRole());
-                user.setIsAdmin(true);
-            }
-            user.setActive(true);
-            Constants.ORGANIZATION_SCHEMA_MAP.put(user.getMobileNumber(), user.getOrganization().getName());
-        });
-        userRepository.saveAll(users);
+    public void saveUser(User user, Organization organization, boolean firstUser) {
+        String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
+        user.setPassword(encodedPassword);
+        user.setOrganization(organization);
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        Query query;
+        entityManager.getTransaction().begin();
+        query = entityManager.createNativeQuery(String.format("SET SCHEMA \'%s\';", user.getOrganization().getName()));
+        query.executeUpdate();
+        Role role = null;
+        if (firstUser) {
+            String sql = "SELECT ROLE.* FROM role AS ROLE WHERE role_name = :roleName";
+            Query role_query = entityManager.createNativeQuery(sql, Role.class);
+            role_query.setParameter("roleName", "ROLE_ADMIN");
+            role = (Role) role_query.getSingleResult();
+        }
+        user.setRoles(new HashSet<>(Arrays.asList(role)));
+        user.setIsAdmin(true);
+        user.setActive(true);
+        entityManager.persist(user);
+        entityManager.getTransaction().commit();
+        Constants.ORGANIZATION_SCHEMA_MAP.put(user.getMobileNumber(), organization.getName());
+    }
+
+    public void saveUsers(User user, Organization organization, boolean firstUser) {
+        String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
+        user.setPassword(encodedPassword);
+        user.setOrganization(organization);
+        if (firstUser && ObjectUtils.isEmpty(user.getRoles())) {
+            user.setRoles(createAdminRole());
+            user.setIsAdmin(true);
+        }
+        user.setActive(true);
+        Constants.ORGANIZATION_SCHEMA_MAP.put(user.getMobileNumber(), user.getOrganization().getName());
+        userRepository.save(user);
     }
 }

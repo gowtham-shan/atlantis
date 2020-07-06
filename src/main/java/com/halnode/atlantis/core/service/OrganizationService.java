@@ -10,13 +10,17 @@ import org.flywaydb.core.Flyway;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
 import java.util.List;
-import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
 public class OrganizationService {
+
+    @PersistenceContext
+    private final EntityManager entityManager;
 
     @NonNull
     private final DataSource dataSource;
@@ -36,7 +40,7 @@ public class OrganizationService {
      *
      * @param schema
      */
-    public void initDatabase(String schema) {
+    public void initDatabaseSchema(String schema) {
         Flyway flyway = Flyway.configure()
                 .locations("db/migration/organizations")
                 .dataSource(dataSource)
@@ -47,11 +51,22 @@ public class OrganizationService {
 
     public Organization saveOrganization(OrganizationDTO organizationDTO) {
         Organization created = organizationRepository.save(organizationDTO.getOrganization());
-        Set<User> usersList = organizationDTO.getUsers();
-        if (!ObjectUtils.isEmpty(usersList)) {
-            userService.saveUsers(usersList, created, true);
+        this.initDatabaseSchema(created.getName());
+        User user = organizationDTO.getUser();
+        if (!ObjectUtils.isEmpty(user)) {
+            userService.saveUser(user, created, true);
         }
-        this.initDatabase(created.getName());
+        return created;
+    }
+
+    @Deprecated
+    public Organization save(OrganizationDTO organizationDTO) {
+        Organization created = organizationRepository.save(organizationDTO.getOrganization());
+        User user = organizationDTO.getUser();
+        if (!ObjectUtils.isEmpty(user)) {
+            userService.saveUsers(user, created, true);
+        }
+        this.initDatabaseSchema(created.getName());
         return created;
     }
 }

@@ -13,6 +13,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.session.MapSessionRepository;
 import org.springframework.session.config.annotation.web.http.EnableSpringHttpSession;
 
@@ -61,18 +62,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .csrf().disable()
+                .csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                .and()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.POST, "/admin/organization").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/admin/organization/v1/save").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/admin/users/v1/save").permitAll()
                 .antMatchers("/admin/**").hasRole("ADMIN")
                 .antMatchers("/", "/auth/obtain-token").permitAll()
                 .anyRequest().authenticated()
                 .and()
+                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
                 .formLogin()
-                .and()
-                .logout().logoutUrl("/auth/logout").permitAll().deleteCookies("SESSION")
-                .and()
-                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+                .and().httpBasic();
     }
 
 }

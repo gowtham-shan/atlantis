@@ -42,9 +42,9 @@ public class JwtUtil {
                 .signWith(SignatureAlgorithm.HS256, Constants.JWT_SECRET_KEY).compact();
     }
 
-    public String createToken(UserDetails userDetails) {
+    public String createToken(String userIdentifier) {
         Map<String, Object> claims = new HashMap<>();
-        return generateToken(claims, userDetails.getUsername());
+        return generateToken(claims, userIdentifier);
     }
 
     public boolean validateToken(String token, UserDetails userDetails) {

@@ -16,13 +16,14 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
-import org.springframework.util.ObjectUtils;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Query;
 import javax.transaction.Transactional;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Component
@@ -47,6 +48,9 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
     @NonNull
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
+    @NonNull
+    private final EntityManagerFactory entityManagerFactory;
+
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
 
@@ -68,14 +72,33 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
             Load all organization names in the  ORGANIZATION_SCHEMA_MAP
             which will be later used to get and set the schema name while running organization specific queries
          */
-        List<User> users = userRepository.findAll();
-        if (!ObjectUtils.isEmpty(users)) {
-            users.stream().filter(Objects::nonNull).forEach(user -> {
-                if (!ObjectUtils.isEmpty(user.getOrganization())) {
-                    Constants.ORGANIZATION_SCHEMA_MAP.put(user.getMobileNumber(), user.getOrganization().getName());
-                }
+//        List<User> users = userRepository.findAll();
+//        if (!ObjectUtils.isEmpty(users)) {
+//            users.stream().filter(Objects::nonNull).forEach(user -> {
+//                if (!ObjectUtils.isEmpty(user.getOrganization())) {
+//                    Constants.ORGANIZATION_SCHEMA_MAP.put(user.getMobileNumber(), user.getOrganization().getName());
+//                }
+//            });
+//        }
+        List<Organization> organizationList = organizationRepository.findAll();
+        List<String> orgNameList = organizationList.stream().map(Organization::getName).collect(Collectors.toList());
+        orgNameList.forEach(name -> {
+            EntityManager entityManager = entityManagerFactory.createEntityManager();
+            Query query;
+            entityManager.getTransaction().begin();
+            query = entityManager.createNativeQuery(String.format("SET SCHEMA \'%s\';", name));
+            query.executeUpdate();
+            String sql = "SELECT u.*,role.*\n" +
+                    "FROM auth_user u\n" +
+                    "JOIN auth_user_roles user_role ON u.user_id = user_role.user_id\n" +
+                    "JOIN role role ON user_role.role_id = role.role_id";
+            Query user_query = entityManager.createNativeQuery(sql, User.class);
+            List<User> userList = user_query.getResultList();
+            userList.forEach(user -> {
+                Constants.ORGANIZATION_SCHEMA_MAP.put(user.getMobileNumber(), name);
             });
-        }
+
+        });
     }
 
     @Transactional

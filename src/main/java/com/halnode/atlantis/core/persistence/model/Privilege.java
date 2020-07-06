@@ -8,7 +8,7 @@ import javax.persistence.*;
 
 @Entity
 @Data
-@Table(name = "privilege", schema = "public", uniqueConstraints = {@UniqueConstraint(columnNames = "name")})
+@Table(name = "privilege", uniqueConstraints = {@UniqueConstraint(columnNames = "name")})
 @AllArgsConstructor
 @NoArgsConstructor
 public class Privilege {
