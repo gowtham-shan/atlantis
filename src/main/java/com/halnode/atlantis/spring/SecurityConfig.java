@@ -65,15 +65,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                 .and()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.POST, "/api/admin/organization/v1/save").permitAll()
-                .antMatchers(HttpMethod.POST, "/api/admin/users/v1/save").permitAll()
-                .antMatchers("/admin/**").hasRole("ADMIN")
-                .antMatchers("/", "/auth/obtain-token").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/admin/organization").permitAll()
+                .antMatchers(HttpMethod.POST, "/auth/obtain-token").permitAll()
+                .antMatchers("/api/admin/**").hasRole("ADMIN")
+                .antMatchers("/").permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
                 .formLogin()
-                .and().httpBasic();
+                .and()
+                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
 }

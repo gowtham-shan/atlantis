@@ -1,7 +1,6 @@
 package com.halnode.atlantis.spring;
 
 import com.halnode.atlantis.core.persistence.model.User;
-import com.halnode.atlantis.core.persistence.repository.UserRepository;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -22,9 +21,6 @@ import java.util.Set;
 @Service
 @RequiredArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsService {
-
-    @NonNull
-    private final UserRepository userRepository;
 
     @NonNull
     private final EntityManagerFactory entityManagerFactory;
@@ -52,6 +48,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             grantedAuthorities.add(new SimpleGrantedAuthority(role.getName()));
         });
 
-        return new org.springframework.security.core.userdetails.User(String.valueOf(user.getMobileNumber()), user.getPassword(), grantedAuthorities);
+        return new org.springframework.security.core.userdetails.User(user.getUserName(), user.getPassword(), grantedAuthorities);
     }
 }

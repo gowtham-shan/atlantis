@@ -6,6 +6,7 @@ import com.halnode.atlantis.spring.UserDetailsServiceImpl;
 import com.halnode.atlantis.util.JwtUtil;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -41,8 +42,8 @@ public class BaseController {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(jwtRequest.getUserName(), jwtRequest.getPassword()));
         } catch (BadCredentialsException e) {
             //TODO: have to write our own exception handler
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Bad Credentials");
         }
-        //final UserDetails userDetails = userDetailsService.loadUserByUsername(jwtRequest.getUserName());
         final String jwtToken = jwtUtil.createToken(jwtRequest.getUserName());
         return ResponseEntity.ok(new JwtResponse(jwtToken));
     }

@@ -28,12 +28,7 @@ public class UserController {
     public ResponseEntity<?> getUser(@PathVariable Long id) {
         return ResponseEntity.ok(userService.getUserById(id));
     }
-
-    @PostMapping("/v1/save")
-    public ResponseEntity<?> save(@RequestBody User user) {
-        return ResponseEntity.ok(userService.saveUser(user));
-    }
-
+    
     @PostMapping
     public ResponseEntity<?> saveUser(@RequestBody User user) {
         return ResponseEntity.ok(userService.saveUser(user));
@@ -43,10 +38,5 @@ public class UserController {
     @PutMapping
     public ResponseEntity<?> updateUser(@RequestBody User user) {
         return ResponseEntity.ok(userService.saveUser(user));
-    }
-
-    @PostMapping("/session")
-    public ResponseEntity<?> testingSessionFactory(@RequestBody User user) {
-        return ResponseEntity.ok("");
     }
 }

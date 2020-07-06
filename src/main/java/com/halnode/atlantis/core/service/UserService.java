@@ -16,7 +16,10 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
 import javax.transaction.Transactional;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -47,34 +50,28 @@ public class UserService {
         return null;
     }
 
-    public Set<Role> createAdminRole() {
-        Role role = roleRepository.findByName("ROLE_ADMIN");
-        if (role == null) {
-            role = new Role();
-            role.setName("ROLE_ADMIN");
-            role = roleRepository.save(role);
-        }
-        return new HashSet<>(Arrays.asList(role));
-    }
-
-    public Role getAdminRole() {
-        Role role = new Role();
-        role.setName("ROLE_ADMIN");
-        return role;
-    }
-
     @Transactional
     public User saveUser(User user) {
-        String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
-        user.setPassword(encodedPassword);
-        EntityManager entityManager = entityManagerFactory.createEntityManager();
-        Query query;
-        entityManager.getTransaction().begin();
-        query = entityManager.createNativeQuery(String.format("SET SCHEMA \'%s\';", user.getOrganization().getName()));
-        query.executeUpdate();
-        entityManager.persist(user);
-        entityManager.getTransaction().commit();
-        Constants.ORGANIZATION_SCHEMA_MAP.put(user.getMobileNumber(), user.getOrganization().getName());
+        if (!ObjectUtils.isEmpty(user.getOrganization())) {
+            String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
+            user.setPassword(encodedPassword);
+            EntityManager entityManager = entityManagerFactory.createEntityManager();
+            Query query;
+            entityManager.getTransaction().begin();
+            query = entityManager.createNativeQuery(String.format("SET SCHEMA \'%s\';", user.getOrganization().getName()));
+            query.executeUpdate();
+            Role adminRole = null;
+            if (user.getIsAdmin()) {
+                String sql = "SELECT ROLE.* FROM role AS ROLE WHERE role_name = :roleName";
+                Query role_query = entityManager.createNativeQuery(sql, Role.class);
+                role_query.setParameter("roleName", "ROLE_ADMIN");
+                adminRole = (Role) role_query.getSingleResult();
+            }
+            user.setRoles(new HashSet<>(Arrays.asList(adminRole)));
+            entityManager.persist(user);
+            entityManager.getTransaction().commit();
+            Constants.ORGANIZATION_SCHEMA_MAP.put(user.getUserName(), user.getOrganization().getName());
+        }
         return user;
     }
 
@@ -99,19 +96,6 @@ public class UserService {
         user.setActive(true);
         entityManager.persist(user);
         entityManager.getTransaction().commit();
-        Constants.ORGANIZATION_SCHEMA_MAP.put(user.getMobileNumber(), organization.getName());
-    }
-
-    public void saveUsers(User user, Organization organization, boolean firstUser) {
-        String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
-        user.setPassword(encodedPassword);
-        user.setOrganization(organization);
-        if (firstUser && ObjectUtils.isEmpty(user.getRoles())) {
-            user.setRoles(createAdminRole());
-            user.setIsAdmin(true);
-        }
-        user.setActive(true);
-        Constants.ORGANIZATION_SCHEMA_MAP.put(user.getMobileNumber(), user.getOrganization().getName());
-        userRepository.save(user);
+        Constants.ORGANIZATION_SCHEMA_MAP.put(user.getUserName(), organization.getName());
     }
 }

@@ -58,15 +58,4 @@ public class OrganizationService {
         }
         return created;
     }
-
-    @Deprecated
-    public Organization save(OrganizationDTO organizationDTO) {
-        Organization created = organizationRepository.save(organizationDTO.getOrganization());
-        User user = organizationDTO.getUser();
-        if (!ObjectUtils.isEmpty(user)) {
-            userService.saveUsers(user, created, true);
-        }
-        this.initDatabaseSchema(created.getName());
-        return created;
-    }
 }

@@ -72,30 +72,23 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
             Load all organization names in the  ORGANIZATION_SCHEMA_MAP
             which will be later used to get and set the schema name while running organization specific queries
          */
-//        List<User> users = userRepository.findAll();
-//        if (!ObjectUtils.isEmpty(users)) {
-//            users.stream().filter(Objects::nonNull).forEach(user -> {
-//                if (!ObjectUtils.isEmpty(user.getOrganization())) {
-//                    Constants.ORGANIZATION_SCHEMA_MAP.put(user.getMobileNumber(), user.getOrganization().getName());
-//                }
-//            });
-//        }
         List<Organization> organizationList = organizationRepository.findAll();
         List<String> orgNameList = organizationList.stream().map(Organization::getName).collect(Collectors.toList());
-        orgNameList.forEach(name -> {
+        organizationList.forEach(organization -> {
             EntityManager entityManager = entityManagerFactory.createEntityManager();
             Query query;
             entityManager.getTransaction().begin();
-            query = entityManager.createNativeQuery(String.format("SET SCHEMA \'%s\';", name));
+            query = entityManager.createNativeQuery(String.format("SET SCHEMA \'%s\';", organization.getName()));
             query.executeUpdate();
-            String sql = "SELECT u.*,role.*\n" +
-                    "FROM auth_user u\n" +
-                    "JOIN auth_user_roles user_role ON u.user_id = user_role.user_id\n" +
-                    "JOIN role role ON user_role.role_id = role.role_id";
+//            String sql = "SELECT u.*,role.*\n" +
+//                    "FROM auth_user u\n" +
+//                    "JOIN auth_user_roles user_role ON u.user_id = user_role.user_id\n" +
+//                    "JOIN role role ON user_role.role_id = role.role_id";
+            String sql = "SELECT * FROM auth_user WHERE org_id=" + organization.getId();
             Query user_query = entityManager.createNativeQuery(sql, User.class);
             List<User> userList = user_query.getResultList();
             userList.forEach(user -> {
-                Constants.ORGANIZATION_SCHEMA_MAP.put(user.getMobileNumber(), name);
+                Constants.ORGANIZATION_SCHEMA_MAP.put(user.getUserName(), organization.getName());
             });
 
         });
@@ -161,6 +154,6 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         user.setActive(true);
         user.setIsAdmin(true);
         userRepository.save(user);
-        Constants.ORGANIZATION_SCHEMA_MAP.put(Long.valueOf(user.getMobileNumber()), organization.getName());
+        Constants.ORGANIZATION_SCHEMA_MAP.put(user.getUserName(), organization.getName());
     }
 }
