@@ -50,6 +50,5 @@ public class BaseController {
         } catch (Exception e) {
             return null;
         }
-
     }
 }
