@@ -10,12 +10,12 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
-import javax.transaction.Transactional;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -70,11 +70,13 @@ public class UserService {
             user.setRoles(new HashSet<>(Arrays.asList(adminRole)));
             entityManager.persist(user);
             entityManager.getTransaction().commit();
+            entityManager.close();
             Constants.ORGANIZATION_SCHEMA_MAP.put(user.getUserName(), user.getOrganization().getName());
         }
         return user;
     }
 
+    @Transactional
     public void saveUser(User user, Organization organization, boolean firstUser) {
         String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
@@ -96,6 +98,7 @@ public class UserService {
         user.setActive(true);
         entityManager.persist(user);
         entityManager.getTransaction().commit();
+        entityManager.close();
         Constants.ORGANIZATION_SCHEMA_MAP.put(user.getUserName(), organization.getName());
     }
 }

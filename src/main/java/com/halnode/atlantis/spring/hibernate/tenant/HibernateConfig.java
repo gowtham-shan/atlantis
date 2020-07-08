@@ -1,4 +1,4 @@
-package com.halnode.atlantis.spring;
+package com.halnode.atlantis.spring.hibernate.tenant;
 
 import com.halnode.atlantis.AtlantisApplication;
 import org.hibernate.MultiTenancyStrategy;

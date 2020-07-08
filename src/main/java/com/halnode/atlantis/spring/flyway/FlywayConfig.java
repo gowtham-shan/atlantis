@@ -1,4 +1,4 @@
-package com.halnode.atlantis.spring;
+package com.halnode.atlantis.spring.flyway;
 
 import com.halnode.atlantis.core.persistence.repository.OrganizationRepository;
 import org.flywaydb.core.Flyway;
@@ -31,5 +31,5 @@ public class FlywayConfig {
             });
         };
     }
-    
+
 }

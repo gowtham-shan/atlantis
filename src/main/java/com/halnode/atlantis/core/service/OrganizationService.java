@@ -10,17 +10,12 @@ import org.flywaydb.core.Flyway;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class OrganizationService {
-
-    @PersistenceContext
-    private final EntityManager entityManager;
 
     @NonNull
     private final DataSource dataSource;

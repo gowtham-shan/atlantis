@@ -1,4 +1,4 @@
-package com.halnode.atlantis.spring;
+package com.halnode.atlantis.spring.exception;
 
 import com.halnode.atlantis.core.constants.ErrorResponse;
 import com.halnode.atlantis.core.exception.ResourceNotFoundException;
