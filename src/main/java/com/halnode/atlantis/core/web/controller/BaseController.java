@@ -2,6 +2,8 @@ package com.halnode.atlantis.core.web.controller;
 
 import com.halnode.atlantis.core.constants.JwtRequest;
 import com.halnode.atlantis.core.constants.JwtResponse;
+import com.halnode.atlantis.core.persistence.model.User;
+import com.halnode.atlantis.core.persistence.repository.UserRepository;
 import com.halnode.atlantis.spring.authentication.UserDetailsServiceImpl;
 import com.halnode.atlantis.util.JwtUtil;
 import lombok.NonNull;
@@ -17,6 +19,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import javax.persistence.EntityManagerFactory;
 
 @Controller
 @RequestMapping("/")
@@ -50,5 +54,23 @@ public class BaseController {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    @NonNull
+    private final EntityManagerFactory entityManagerFactory;
+
+    @NonNull
+    private final UserRepository userRepository;
+
+    @GetMapping("/test")
+    public ResponseEntity<?> test() {
+//        EntityManager entityManager = entityManagerFactory.createEntityManager();
+//        entityManager.getTransaction().begin();
+//        Query query = entityManager.createNativeQuery("SET SCHEMA \'Halnode\'");
+//        query.executeUpdate();
+        User userList = userRepository.findByUserName("admin");
+
+        //entityManager.close();
+        return ResponseEntity.ok(userList);
     }
 }

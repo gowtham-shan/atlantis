@@ -1,5 +1,6 @@
 package com.halnode.atlantis.spring.authentication;
 
+import com.halnode.atlantis.util.Constants;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -27,14 +28,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
-
-//    @Bean
-//    public MapSessionRepository sessionRepository() {
-//        MapSessionRepository repository = new MapSessionRepository(new ConcurrentHashMap<>());
-//        repository.setDefaultMaxInactiveInterval(1800);
-//        return repository;
-//    }
 
     @Bean
     public AuthenticationManager customAuthenticationManager() throws Exception {
@@ -65,15 +58,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/api/admin/organization").permitAll()
                 .antMatchers(HttpMethod.POST, "/auth/obtain-token").permitAll()
                 .antMatchers("/api/admin/**").access("hasAnyRole('ADMIN')")
-                //.antMatchers("/api/admin/users").hasAnyRole("USER", "ADMIN")
                 .antMatchers("/").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
                 .and()
+                .logout().deleteCookies("JSESSIONID")
+                .permitAll()
+                .and()
+                .rememberMe()
+                .key(Constants.REMEMBER_ME_SECRET_KEY).userDetailsService(userDetailsService)
+                .tokenValiditySeconds(86400)
+                .and()
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
-//        http.sessionManagement().maximumSessions(1).expiredUrl("/login?expired=true");
     }
 
 }
