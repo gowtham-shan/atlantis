@@ -34,7 +34,6 @@ public class UserController {
         return ResponseEntity.ok(userService.saveUser(user));
     }
 
-    //TODO: proper update should be implemented
     @PutMapping
     public ResponseEntity<?> updateUser(@RequestBody User user) {
         return ResponseEntity.ok(userService.saveUser(user));

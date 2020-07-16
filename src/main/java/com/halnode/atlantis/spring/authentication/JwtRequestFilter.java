@@ -19,6 +19,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * This is performs JWT TOKEN VALIDATION/AUTHENTICATION if jwt token is present in the request.
+ * Every request will pass through this class
+ *
+ * @author gowtham
+ */
 @Component
 @RequiredArgsConstructor
 @Log4j2

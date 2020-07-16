@@ -3,11 +3,14 @@ package com.halnode.atlantis.spring.init;
 import com.halnode.atlantis.core.persistence.model.Organization;
 import com.halnode.atlantis.core.persistence.model.User;
 import com.halnode.atlantis.core.persistence.repository.OrganizationRepository;
+import com.halnode.atlantis.core.persistence.repository.UserRepository;
 import com.halnode.atlantis.util.Constants;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.data.jpa.repository.support.JpaRepositoryFactory;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityManager;
@@ -23,7 +26,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
     private final OrganizationRepository organizationRepository;
 
     @NonNull
-    private final EntityManagerFactory entityManagerFactory;
+    private final LocalContainerEntityManagerFactoryBean localContainerEntityManagerFactoryBean;
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
@@ -33,14 +36,18 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
          */
         List<Organization> organizationList = organizationRepository.findAll();
         organizationList.forEach(organization -> {
-            EntityManager entityManager = entityManagerFactory.createEntityManager();
+
+            EntityManagerFactory emf = localContainerEntityManagerFactoryBean.getNativeEntityManagerFactory();
+            EntityManager entityManager = emf.createEntityManager();
             Query query;
             entityManager.getTransaction().begin();
             query = entityManager.createNativeQuery(String.format("SET SCHEMA \'%s\';", organization.getName()));
             query.executeUpdate();
-            String sql = "SELECT * FROM auth_user WHERE org_id=" + organization.getId();
-            Query user_query = entityManager.createNativeQuery(sql, User.class);
-            List<User> userList = user_query.getResultList();
+
+            JpaRepositoryFactory jpaRepositoryFactory = new JpaRepositoryFactory(entityManager);
+            UserRepository userRepository = jpaRepositoryFactory.getRepository(UserRepository.class);
+            List<User> userList = userRepository.findUsersByOrOrganizationId(organization.getId());
+
             userList.forEach(user -> {
                 Constants.ORGANIZATION_SCHEMA_MAP.put(user.getUserName(), organization.getName());
             });

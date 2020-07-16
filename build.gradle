@@ -8,9 +8,8 @@ plugins {
 group = 'com.halnode'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
-repositories {
-    mavenCentral()
-}
+
+
 configurations {
     compileOnly {
         extendsFrom annotationProcessor
@@ -19,6 +18,10 @@ configurations {
 
 ext {
     set('snippetsDir', file("build/generated-snippets"))
+}
+
+repositories {
+    mavenCentral()
 }
 
 dependencies {
@@ -58,3 +61,10 @@ asciidoctor {
     dependsOn test
 }
 
+bootJar {
+    enabled = true
+    archiveClassifier = 'executable'
+}
+jar {
+    enabled = true
+}

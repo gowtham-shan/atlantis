@@ -1,9 +1,12 @@
 spring:
   mustache:
     suffix: .html
-    cache: true
+    cache: false
   datasource:
     driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/atlantis
+    username: atlantis
+    password: Wecandoit
   jackson:
     serialization:
       fail-on-empty-beans: false
@@ -13,6 +16,8 @@ spring:
     locations: classpath:db/migration/public/
     init-sqls: CREATE IF NOT EXISTS flyway_history_schema
   jpa:
+    hibernate:
+      ddl-auto: none
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     show-sql: true
     properties:
@@ -43,33 +48,9 @@ server:
 ---
 spring:
   profiles: development
-  datasource:
-    url: jdbc:postgresql://localhost:5432/atlantis
-    username: atlantis
-    password: Wecandoit
-  jpa:
-    hibernate:
-      ddl-auto: none
-    show-sql: true
-  mustache:
-    cache: false
   devtools:
     livereload:
       enabled: true
     restart:
       log-condition-evaluation-delta: false
-  flyway:
-    enabled: true
-    clean-disabled: false
----
-spring:
-  profiles: production
-  mustache:
-    cache: false
-  flyway:
-    enabled: false
-    baseline-on-migrate: true
-  devtools:
-    livereload:
-      enabled: false
 ---

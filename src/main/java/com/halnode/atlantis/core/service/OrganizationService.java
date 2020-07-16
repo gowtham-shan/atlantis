@@ -31,7 +31,8 @@ public class OrganizationService {
     }
 
     /**
-     * Apply migration scripts for newly created organization
+     * Apply migration scripts for newly created organization.
+     * Must be called for every newly created organization
      *
      * @param schema
      */

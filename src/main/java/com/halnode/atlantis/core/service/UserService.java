@@ -8,6 +8,8 @@ import com.halnode.atlantis.core.persistence.repository.UserRepository;
 import com.halnode.atlantis.util.Constants;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.repository.support.JpaRepositoryFactory;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,13 +28,13 @@ import java.util.Optional;
 public class UserService {
 
     @NonNull
+    private final LocalContainerEntityManagerFactoryBean localContainerEntityManagerFactoryBean;
+
+    @NonNull
     private final UserRepository userRepository;
 
     @NonNull
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
-
-    @NonNull
-    private final RoleRepository roleRepository;
 
     @NonNull
     private final EntityManagerFactory entityManagerFactory;
@@ -55,20 +57,27 @@ public class UserService {
         if (!ObjectUtils.isEmpty(user.getOrganization())) {
             String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
             user.setPassword(encodedPassword);
-            EntityManager entityManager = entityManagerFactory.createEntityManager();
+            EntityManagerFactory emf = localContainerEntityManagerFactoryBean.getNativeEntityManagerFactory();
+            EntityManager entityManager = emf.createEntityManager();
+            JpaRepositoryFactory jpaRepositoryFactory = new JpaRepositoryFactory(entityManager);
             Query query;
             entityManager.getTransaction().begin();
             query = entityManager.createNativeQuery(String.format("SET SCHEMA \'%s\';", user.getOrganization().getName()));
             query.executeUpdate();
+
             Role adminRole = null;
             if (user.getIsAdmin()) {
-                String sql = "SELECT ROLE.* FROM role AS ROLE WHERE role_name = :roleName";
-                Query role_query = entityManager.createNativeQuery(sql, Role.class);
-                role_query.setParameter("roleName", "ROLE_ADMIN");
-                adminRole = (Role) role_query.getSingleResult();
+                RoleRepository roleRepository = jpaRepositoryFactory.getRepository(RoleRepository.class);
+                adminRole = roleRepository.findByName("ROLE_ADMIN");
+//                String sql = "SELECT ROLE.* FROM role AS ROLE WHERE role_name = :roleName";
+//                Query role_query = entityManager.createNativeQuery(sql, Role.class);
+//                role_query.setParameter("roleName", "ROLE_ADMIN");
+//                adminRole = (Role) role_query.getSingleResult();
             }
+            UserRepository userRepository = jpaRepositoryFactory.getRepository(UserRepository.class);
             user.setRoles(new HashSet<>(Arrays.asList(adminRole)));
-            entityManager.persist(user);
+            userRepository.save(user);
+//            entityManager.persist(user);
             entityManager.getTransaction().commit();
             entityManager.close();
             Constants.ORGANIZATION_SCHEMA_MAP.put(user.getUserName(), user.getOrganization().getName());
@@ -81,22 +90,29 @@ public class UserService {
         String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
         user.setOrganization(organization);
-        EntityManager entityManager = entityManagerFactory.createEntityManager();
+
+        EntityManagerFactory emf = localContainerEntityManagerFactoryBean.getNativeEntityManagerFactory();
+        EntityManager entityManager = emf.createEntityManager();
+        JpaRepositoryFactory jpaRepositoryFactory = new JpaRepositoryFactory(entityManager);
         Query query;
         entityManager.getTransaction().begin();
         query = entityManager.createNativeQuery(String.format("SET SCHEMA \'%s\';", user.getOrganization().getName()));
         query.executeUpdate();
         Role role = null;
+
         if (firstUser) {
-            String sql = "SELECT ROLE.* FROM role AS ROLE WHERE role_name = :roleName";
-            Query role_query = entityManager.createNativeQuery(sql, Role.class);
-            role_query.setParameter("roleName", "ROLE_ADMIN");
-            role = (Role) role_query.getSingleResult();
+            RoleRepository roleRepository = jpaRepositoryFactory.getRepository(RoleRepository.class);
+            role = roleRepository.findByName("ROLE_ADMIN");
+//            String sql = "SELECT ROLE.* FROM role AS ROLE WHERE role_name = :roleName";
+//            Query role_query = entityManager.createNativeQuery(sql, Role.class);
+//            role_query.setParameter("roleName", "ROLE_ADMIN");
+//            role = (Role) role_query.getSingleResult();
         }
         user.setRoles(new HashSet<>(Arrays.asList(role)));
         user.setIsAdmin(true);
         user.setActive(true);
-        entityManager.persist(user);
+        UserRepository userRepository = jpaRepositoryFactory.getRepository(UserRepository.class);
+        userRepository.save(user);
         entityManager.getTransaction().commit();
         entityManager.close();
         Constants.ORGANIZATION_SCHEMA_MAP.put(user.getUserName(), organization.getName());
