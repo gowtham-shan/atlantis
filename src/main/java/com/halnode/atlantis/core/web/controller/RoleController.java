@@ -9,7 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.util.Optional;
 
 @RestController
@@ -24,12 +24,12 @@ public class RoleController {
     private final RoleService roleService;
 
     @GetMapping
-    public ResponseEntity<?> getRoles(HttpServletRequest request) {
+    public ResponseEntity<?> getRoles() {
         return ResponseEntity.ok(roleService.getRoles());
     }
 
     @PostMapping
-    public ResponseEntity<Role> createRole(@RequestBody Role role) {
+    public ResponseEntity<Role> createRole(@Valid @RequestBody Role role) {
         Role created = roleRepository.save(role);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
@@ -41,7 +41,7 @@ public class RoleController {
     }
 
     @PutMapping
-    public ResponseEntity<?> updateRole(@RequestBody Role role) {
+    public ResponseEntity<?> updateRole(@Valid @RequestBody Role role) {
         return ResponseEntity.ok(roleRepository.save(role));
     }
 }

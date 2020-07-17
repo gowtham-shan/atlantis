@@ -69,15 +69,10 @@ public class UserService {
             if (user.getIsAdmin()) {
                 RoleRepository roleRepository = jpaRepositoryFactory.getRepository(RoleRepository.class);
                 adminRole = roleRepository.findByName("ROLE_ADMIN");
-//                String sql = "SELECT ROLE.* FROM role AS ROLE WHERE role_name = :roleName";
-//                Query role_query = entityManager.createNativeQuery(sql, Role.class);
-//                role_query.setParameter("roleName", "ROLE_ADMIN");
-//                adminRole = (Role) role_query.getSingleResult();
             }
             UserRepository userRepository = jpaRepositoryFactory.getRepository(UserRepository.class);
             user.setRoles(new HashSet<>(Arrays.asList(adminRole)));
             userRepository.save(user);
-//            entityManager.persist(user);
             entityManager.getTransaction().commit();
             entityManager.close();
             Constants.ORGANIZATION_SCHEMA_MAP.put(user.getUserName(), user.getOrganization().getName());
@@ -103,10 +98,6 @@ public class UserService {
         if (firstUser) {
             RoleRepository roleRepository = jpaRepositoryFactory.getRepository(RoleRepository.class);
             role = roleRepository.findByName("ROLE_ADMIN");
-//            String sql = "SELECT ROLE.* FROM role AS ROLE WHERE role_name = :roleName";
-//            Query role_query = entityManager.createNativeQuery(sql, Role.class);
-//            role_query.setParameter("roleName", "ROLE_ADMIN");
-//            role = (Role) role_query.getSingleResult();
         }
         user.setRoles(new HashSet<>(Arrays.asList(role)));
         user.setIsAdmin(true);

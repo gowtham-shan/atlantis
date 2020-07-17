@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 import java.util.Set;
 
 
@@ -20,6 +22,8 @@ public class Role {
     private Long id;
 
     @Column(name = "role_name")
+    @NotEmpty(message = "Role name must not be null or empty")
+    @Size(max = 32)
     private String name;
 
     private String description;

@@ -4,6 +4,7 @@ import lombok.Data;
 import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 
 @Entity
 @Data
@@ -16,12 +17,7 @@ public class Organization {
     @Column(name = "org_id")
     private Long id;
 
+    @NotEmpty(message = "Organization name must not be null or empty")
     private String name;
-
-//    @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-//    @JsonIgnore
-//    @NotAudited
-//    private Set<User> users;
-
-
+    
 }

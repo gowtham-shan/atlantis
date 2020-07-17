@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 import java.util.Set;
 
 @Entity
@@ -21,20 +23,26 @@ public class User {
     private Long id;
 
     @Column(name = "user_name")
+    @NotEmpty(message = "User name must not be null or empty")
+    @Size(max = 32)
     private String userName;
 
+    @Size(max = 72)
     private String password;
 
     @Transient
     private String confirmPassword;
 
     @Column(name = "first_name")
+    @NotEmpty(message = "First name must not be null or empty")
+    @Size(max = 32)
     private String firstName;
 
     @Column(name = "last_name")
+    @Size(max = 32)
     private String lastName;
 
-    @Column(name = "mobile_number")
+    @Column(name = "mobile_number", unique = true)
     private Long mobileNumber;
 
     private String email;

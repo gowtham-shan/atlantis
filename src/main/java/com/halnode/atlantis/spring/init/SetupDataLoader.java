@@ -12,6 +12,7 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.data.jpa.repository.support.JpaRepositoryFactory;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.stereotype.Component;
+import org.springframework.util.ObjectUtils;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -35,22 +36,25 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
             which will be later used to get and set the schema name while running organization specific queries
          */
         List<Organization> organizationList = organizationRepository.findAll();
-        organizationList.forEach(organization -> {
+        if (!ObjectUtils.isEmpty(organizationList)) {
+            organizationList.forEach(organization -> {
 
-            EntityManagerFactory emf = localContainerEntityManagerFactoryBean.getNativeEntityManagerFactory();
-            EntityManager entityManager = emf.createEntityManager();
-            Query query;
-            entityManager.getTransaction().begin();
-            query = entityManager.createNativeQuery(String.format("SET SCHEMA \'%s\';", organization.getName()));
-            query.executeUpdate();
+                EntityManagerFactory emf = localContainerEntityManagerFactoryBean.getNativeEntityManagerFactory();
+                EntityManager entityManager = emf.createEntityManager();
+                Query query;
+                entityManager.getTransaction().begin();
+                query = entityManager.createNativeQuery(String.format("SET SCHEMA \'%s\';", organization.getName()));
+                query.executeUpdate();
 
-            JpaRepositoryFactory jpaRepositoryFactory = new JpaRepositoryFactory(entityManager);
-            UserRepository userRepository = jpaRepositoryFactory.getRepository(UserRepository.class);
-            List<User> userList = userRepository.findUsersByOrOrganizationId(organization.getId());
+                JpaRepositoryFactory jpaRepositoryFactory = new JpaRepositoryFactory(entityManager);
+                UserRepository userRepository = jpaRepositoryFactory.getRepository(UserRepository.class);
+                List<User> userList = userRepository.findUsersByOrOrganizationId(organization.getId());
 
-            userList.forEach(user -> {
-                Constants.ORGANIZATION_SCHEMA_MAP.put(user.getUserName(), organization.getName());
+                userList.forEach(user -> {
+                    Constants.ORGANIZATION_SCHEMA_MAP.put(user.getUserName(), organization.getName());
+                });
             });
-        });
+        }
+
     }
 }

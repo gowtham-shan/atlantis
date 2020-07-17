@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/api/admin/users")
 @RequiredArgsConstructor
@@ -30,12 +32,12 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<?> saveUser(@RequestBody User user) {
+    public ResponseEntity<?> createUser(@Valid @RequestBody User user) {
         return ResponseEntity.ok(userService.saveUser(user));
     }
 
     @PutMapping
-    public ResponseEntity<?> updateUser(@RequestBody User user) {
+    public ResponseEntity<?> updateUser(@Valid @RequestBody User user) {
         return ResponseEntity.ok(userService.saveUser(user));
     }
 }

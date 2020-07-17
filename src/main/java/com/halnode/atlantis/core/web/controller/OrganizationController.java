@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 
 @RestController
 @RequestMapping("/api/admin/organization")
@@ -27,12 +29,12 @@ public class OrganizationController {
     }
 
     @PostMapping
-    public ResponseEntity<?> saveOrganization(@RequestBody OrganizationDTO organizationDTO) {
+    public ResponseEntity<?> createOrganization(@Valid @RequestBody OrganizationDTO organizationDTO) {
         return ResponseEntity.ok(organizationService.saveOrganization(organizationDTO));
     }
 
     @PutMapping
-    public ResponseEntity<?> updateOrganization(@RequestBody Organization organization) {
+    public ResponseEntity<?> updateOrganization(@Valid @RequestBody Organization organization) {
         return ResponseEntity.ok(organizationRepository.save(organization));
     }
 

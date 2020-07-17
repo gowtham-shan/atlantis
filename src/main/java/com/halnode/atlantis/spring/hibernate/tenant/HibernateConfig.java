@@ -36,7 +36,7 @@ public class HibernateConfig {
         em.setDataSource(dataSource);
         em.setPackagesToScan(AtlantisApplication.class.getPackage().getName());
         em.setJpaVendorAdapter(jpaVendorAdapter());
-
+        em.setPackagesToScan("com.halnode.*");
         Map<String, Object> jpaPropertiesMap = new HashMap<>(jpaProperties.getProperties());
         jpaPropertiesMap.put(Environment.MULTI_TENANT, MultiTenancyStrategy.SCHEMA);
         jpaPropertiesMap.put(Environment.MULTI_TENANT_CONNECTION_PROVIDER, multiTenantConnectionProvider);

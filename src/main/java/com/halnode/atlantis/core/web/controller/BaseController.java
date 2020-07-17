@@ -12,14 +12,18 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.validation.Valid;
+
 @Controller
 @RequestMapping("/")
 @RequiredArgsConstructor
+@Validated
 public class BaseController {
 
     @NonNull
@@ -37,7 +41,7 @@ public class BaseController {
     }
 
     @PostMapping("/auth/obtain-token")
-    public ResponseEntity<?> authentication(@RequestBody JwtRequest jwtRequest) {
+    public ResponseEntity<?> authentication(@Valid @RequestBody JwtRequest jwtRequest) {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(jwtRequest.getUserName(), jwtRequest.getPassword()));
             final String jwtToken = jwtUtil.createToken(jwtRequest.getUserName());
