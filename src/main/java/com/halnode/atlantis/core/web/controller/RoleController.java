@@ -44,4 +44,10 @@ public class RoleController {
     public ResponseEntity<?> updateRole(@Valid @RequestBody Role role) {
         return ResponseEntity.ok(roleRepository.save(role));
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteRole(@PathVariable Long id) {
+        roleRepository.deleteById(id);
+        return ResponseEntity.ok().build();
+    }
 }

@@ -40,4 +40,10 @@ public class UserController {
     public ResponseEntity<?> updateUser(@Valid @RequestBody User user) {
         return ResponseEntity.ok(userService.saveUser(user));
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteOrganization(@PathVariable Long id) {
+        userRepository.deleteById(id);
+        return ResponseEntity.ok().build();
+    }
 }
