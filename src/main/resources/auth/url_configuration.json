@@ -1,0 +1,30 @@
+[
+  {
+    "url": "/resources/**",
+    "method": null,
+    "roles": null
+  },
+  {
+    "url": "/api/admin/organization",
+    "method": "POST",
+    "roles": null
+  },
+  {
+    "url": "/auth/obtain-token",
+    "method": "POST",
+    "roles": null
+  },
+  {
+    "url": "/api/admin/**",
+    "method": null,
+    "roles": [
+      "ROLE_ADMIN"
+    ]
+  },
+  {
+    "url": "/",
+    "method": null,
+    "roles": null
+  }
+]
+

@@ -6,19 +6,21 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.annotation.Order;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.ObjectPostProcessor;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
+import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 /**
  * Configuration class for spring security.
+ * Order must be of HIGHEST_PRIORITY since this is base framework
  *
  * @author gowtham
  */
@@ -30,7 +32,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Qualifier("userDetailsServiceImpl")
     @NonNull
     public UserDetailsService userDetailsService;
-
 
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
@@ -45,15 +46,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @NonNull
     private final JwtRequestFilter jwtRequestFilter;
 
-
-    @Override
-    public void configure(WebSecurity web) {
-        assert web != null;
-        web
-                .ignoring()
-                .antMatchers("/resources/**", "/static/**", "/css/**", "/plugins/**", "/images/**", "/js/**");
-    }
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
@@ -61,12 +53,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                 .and()
-                .antMatcher("/api/admin/**")
                 .authorizeRequests()
-                .antMatchers(HttpMethod.POST, "/api/admin/organization").permitAll()
-                .antMatchers(HttpMethod.POST, "/auth/obtain-token").permitAll()
-                .antMatchers("/api/admin/**").access("hasAnyRole('ADMIN')")
-                .antMatchers("/").permitAll()
+                .withObjectPostProcessor(new ObjectPostProcessor<FilterSecurityInterceptor>() {
+                    public <O extends FilterSecurityInterceptor> O postProcess(O fsi) {
+                        FilterInvocationSecurityMetadataSource newSource = new CustomFilterInvocationSecurityMetadataSource();
+                        fsi.setSecurityMetadataSource(newSource);
+                        fsi.setAccessDecisionManager(new CustomAccessDecisionManager());
+                        return fsi;
+                    }
+                })
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
@@ -76,7 +71,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .rememberMe()
                 .key(Constants.REMEMBER_ME_SECRET_KEY).userDetailsService(userDetailsService)
-                .tokenValiditySeconds(86400)
+                .tokenValiditySeconds(Constants.REMEMBER_ME_TOKEN_VALIDITY)
                 .and()
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 

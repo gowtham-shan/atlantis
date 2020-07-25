@@ -1,7 +1,6 @@
 package com.halnode.atlantis.core.web.controller;
 
 import com.halnode.atlantis.core.persistence.model.User;
-import com.halnode.atlantis.core.persistence.repository.UserRepository;
 import com.halnode.atlantis.core.service.UserService;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -14,10 +13,7 @@ import javax.validation.Valid;
 @RequestMapping("/api/admin/users")
 @RequiredArgsConstructor
 public class UserController {
-
-    @NonNull
-    private final UserRepository userRepository;
-
+    
     @NonNull
     private final UserService userService;
 
@@ -42,8 +38,8 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteOrganization(@PathVariable Long id) {
-        userRepository.deleteById(id);
+    public ResponseEntity<?> deleteUser(@PathVariable Long id) {
+        userService.deleteUser(id);
         return ResponseEntity.ok().build();
     }
 }

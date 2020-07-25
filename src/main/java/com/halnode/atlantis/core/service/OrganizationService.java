@@ -54,4 +54,12 @@ public class OrganizationService {
         }
         return created;
     }
+
+    public Organization updateOrganization(Organization organization) {
+        return organizationRepository.save(organization);
+    }
+
+    public void deleteOrganization(Long id) {
+        organizationRepository.deleteById(id);
+    }
 }

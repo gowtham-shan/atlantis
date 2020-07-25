@@ -5,7 +5,6 @@ import com.halnode.atlantis.core.persistence.model.Role;
 import com.halnode.atlantis.core.persistence.model.User;
 import com.halnode.atlantis.core.persistence.repository.RoleRepository;
 import com.halnode.atlantis.core.persistence.repository.UserRepository;
-import com.halnode.atlantis.util.Constants;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.repository.support.JpaRepositoryFactory;
@@ -36,9 +35,6 @@ public class UserService {
     @NonNull
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    @NonNull
-    private final EntityManagerFactory entityManagerFactory;
-
     public List<User> getUsers() {
         return userRepository.findAll();
     }
@@ -48,44 +44,22 @@ public class UserService {
         if (userOptional.isPresent()) {
             return userOptional.get();
         }
-        //TODO: Throw proper exception instead of null
         return null;
     }
 
     @Transactional
     public User saveUser(User user) {
         if (!ObjectUtils.isEmpty(user.getOrganization())) {
-            String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
-            user.setPassword(encodedPassword);
-            EntityManagerFactory emf = localContainerEntityManagerFactoryBean.getNativeEntityManagerFactory();
-            EntityManager entityManager = emf.createEntityManager();
-            JpaRepositoryFactory jpaRepositoryFactory = new JpaRepositoryFactory(entityManager);
-            Query query;
-            entityManager.getTransaction().begin();
-            query = entityManager.createNativeQuery(String.format("SET SCHEMA \'%s\';", user.getOrganization().getName()));
-            query.executeUpdate();
-
-            Role adminRole = null;
-            if (user.getIsAdmin()) {
-                RoleRepository roleRepository = jpaRepositoryFactory.getRepository(RoleRepository.class);
-                adminRole = roleRepository.findByName("ROLE_ADMIN");
-            }
-            UserRepository userRepository = jpaRepositoryFactory.getRepository(UserRepository.class);
-            user.setRoles(new HashSet<>(Arrays.asList(adminRole)));
-            userRepository.save(user);
-            entityManager.getTransaction().commit();
-            entityManager.close();
-            Constants.ORGANIZATION_SCHEMA_MAP.put(user.getUserName(), user.getOrganization().getName());
+            return this.saveUser(user, user.getOrganization(), user.getIsAdmin());
         }
-        return user;
+        return null;
     }
 
     @Transactional
-    public void saveUser(User user, Organization organization, boolean firstUser) {
+    public User saveUser(User user, Organization organization, boolean isAdmin) {
         String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
         user.setOrganization(organization);
-
         EntityManagerFactory emf = localContainerEntityManagerFactoryBean.getNativeEntityManagerFactory();
         EntityManager entityManager = emf.createEntityManager();
         JpaRepositoryFactory jpaRepositoryFactory = new JpaRepositoryFactory(entityManager);
@@ -94,18 +68,21 @@ public class UserService {
         query = entityManager.createNativeQuery(String.format("SET SCHEMA \'%s\';", user.getOrganization().getName()));
         query.executeUpdate();
         Role role = null;
-
-        if (firstUser) {
+        if (isAdmin) {
             RoleRepository roleRepository = jpaRepositoryFactory.getRepository(RoleRepository.class);
             role = roleRepository.findByName("ROLE_ADMIN");
         }
         user.setRoles(new HashSet<>(Arrays.asList(role)));
-        user.setIsAdmin(true);
+        user.setIsAdmin(isAdmin);
         user.setActive(true);
         UserRepository userRepository = jpaRepositoryFactory.getRepository(UserRepository.class);
-        userRepository.save(user);
+        User savedUser = userRepository.save(user);
         entityManager.getTransaction().commit();
         entityManager.close();
-        Constants.ORGANIZATION_SCHEMA_MAP.put(user.getUserName(), organization.getName());
+        return savedUser;
+    }
+
+    public void deleteUser(Long id) {
+        userRepository.deleteById(id);
     }
 }

@@ -1,6 +1,7 @@
 package com.halnode.atlantis.spring.hibernate.tenant;
 
 
+import com.halnode.atlantis.core.constants.CustomUserDetails;
 import com.halnode.atlantis.util.Constants;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.context.spi.CurrentTenantIdentifierResolver;
@@ -20,7 +21,9 @@ public class TenantIdentifierResolver implements CurrentTenantIdentifierResolver
         if (!ObjectUtils.isEmpty(auth)) {
             if (!(auth instanceof AnonymousAuthenticationToken)) {
                 String currentUserName = auth.getName();
-                return Constants.ORGANIZATION_SCHEMA_MAP.get(currentUserName);
+                CustomUserDetails userDetails = (CustomUserDetails) auth.getPrincipal();
+                System.out.println("TENANT IDENTIFIER RESOLVER ::" + userDetails.getUser().getOrganization().getName());
+                return userDetails.getUser().getOrganization().getName();
             }
             return Constants.DEFAULT_TENANT;
         }

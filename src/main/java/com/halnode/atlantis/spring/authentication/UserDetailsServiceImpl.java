@@ -1,5 +1,6 @@
 package com.halnode.atlantis.spring.authentication;
 
+import com.halnode.atlantis.core.constants.CustomUserDetails;
 import com.halnode.atlantis.core.persistence.model.User;
 import com.halnode.atlantis.core.persistence.repository.UserRepository;
 import lombok.NonNull;
@@ -7,8 +8,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.repository.support.JpaRepositoryFactory;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -20,8 +19,6 @@ import org.springframework.util.ObjectUtils;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
-import java.util.HashSet;
-import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -75,13 +72,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         if (ObjectUtils.isEmpty(user)) throw new UsernameNotFoundException(currentUserName);
 
-        //Set roles from the user objects
-        Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
-        if (!ObjectUtils.isEmpty(user.getRoles())) {
-            user.getRoles().forEach(role -> {
-                grantedAuthorities.add(new SimpleGrantedAuthority(role.getName()));
-            });
-        }
-        return new org.springframework.security.core.userdetails.User(user.getUserName(), user.getPassword(), grantedAuthorities);
+        return new CustomUserDetails(user);
     }
 }
