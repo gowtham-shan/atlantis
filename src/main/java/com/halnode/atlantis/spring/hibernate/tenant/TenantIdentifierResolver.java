@@ -22,7 +22,6 @@ public class TenantIdentifierResolver implements CurrentTenantIdentifierResolver
             if (!(auth instanceof AnonymousAuthenticationToken)) {
                 String currentUserName = auth.getName();
                 CustomUserDetails userDetails = (CustomUserDetails) auth.getPrincipal();
-                System.out.println("TENANT IDENTIFIER RESOLVER ::" + userDetails.getUser().getOrganization().getName());
                 return userDetails.getUser().getOrganization().getName();
             }
             return Constants.DEFAULT_TENANT;
@@ -31,6 +30,11 @@ public class TenantIdentifierResolver implements CurrentTenantIdentifierResolver
         return Constants.DEFAULT_TENANT;
     }
 
+    /**
+     * Need not to check the existing db connections with the tenants.
+     *
+     * @return false
+     */
     @Override
     public boolean validateExistingCurrentSessions() {
         return false;

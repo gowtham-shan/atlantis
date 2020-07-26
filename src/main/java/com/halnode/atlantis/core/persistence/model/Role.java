@@ -9,13 +9,13 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.util.Set;
 
-
 @Data
 @Entity
 @Table(name = "role", uniqueConstraints = @UniqueConstraint(columnNames = "role_name"))
 @AllArgsConstructor
 @NoArgsConstructor
 public class Role {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "role_id")

@@ -32,6 +32,11 @@ public class CustomFilterInvocationSecurityMetadataSource implements FilterInvoc
 
     private Map<RequestMatcher, Collection<ConfigAttribute>> configurationMap = null;
 
+    /**
+     * This function will read urls and it's required permission(i.e, roles) from a configuration json file.
+     * The configurations are converted as a Map<RequestMatcher,Collection<ConfigAttribute>>
+     * in order to decide the access for the requested url ( REQUESTED URL and it's info are fetched from HttpServletRequest).
+     */
     private void loadConfigurationMap() {
         try {
             configurationMap = new LinkedHashMap<>();

@@ -20,8 +20,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * This is performs JWT TOKEN VALIDATION/AUTHENTICATION if jwt token is present in the request.
- * Every request will pass through this class
+ * <p>This is performs JWT TOKEN VALIDATION/AUTHENTICATION if jwt token is present in the request.</p>
+ * <p>If the JWT TOKEN is not present in the header
+ * then it will pass on the request to the next filter in the spring security.</p>
+ * <p>Every request will pass through this class</p>
  *
  * @author gowtham
  */

@@ -20,30 +20,6 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
-        /*
-            Load all organization names in the  ORGANIZATION_SCHEMA_MAP
-            which will be later used to get and set the schema name while running organization specific queries
-         */
-//        List<Organization> organizationList = organizationRepository.findAll();
-//        if (!ObjectUtils.isEmpty(organizationList)) {
-//            organizationList.forEach(organization -> {
-//
-//                EntityManagerFactory emf = localContainerEntityManagerFactoryBean.getNativeEntityManagerFactory();
-//                EntityManager entityManager = emf.createEntityManager();
-//                Query query;
-//                entityManager.getTransaction().begin();
-//                query = entityManager.createNativeQuery(String.format("SET SCHEMA \'%s\';", organization.getName()));
-//                query.executeUpdate();
-//
-//                JpaRepositoryFactory jpaRepositoryFactory = new JpaRepositoryFactory(entityManager);
-//                UserRepository userRepository = jpaRepositoryFactory.getRepository(UserRepository.class);
-//                List<User> userList = userRepository.findUsersByOrOrganizationId(organization.getId());
-//
-//                userList.forEach(user -> {
-//                    Constants.ORGANIZATION_SCHEMA_MAP.put(user.getUserName(), organization.getName());
-//                });
-//            });
-//        }
-//
+       
     }
 }

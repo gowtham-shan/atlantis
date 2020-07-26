@@ -36,6 +36,7 @@ public class OrganizationController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteOrganization(@PathVariable Long id) {
+        organizationService.deleteOrganization(id);
         return ResponseEntity.ok().build();
     }
 }

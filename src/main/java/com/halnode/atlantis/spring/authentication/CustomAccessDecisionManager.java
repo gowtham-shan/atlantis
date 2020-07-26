@@ -25,6 +25,10 @@ public class CustomAccessDecisionManager implements AccessDecisionManager {
 
     @Override
     public void decide(Authentication authentication, Object object, Collection<ConfigAttribute> configAttributes) throws AccessDeniedException, InsufficientAuthenticationException {
+        /*
+            ConfigAttributes will be empty(if not mentioned as null in url_configuration file)
+            or null (if specified as null in url_configuration file) when the url should be accessible by all(i.e, permitAll).
+        */
         if (ObjectUtils.isEmpty(configAttributes)) {
             return;
         }
@@ -44,11 +48,11 @@ public class CustomAccessDecisionManager implements AccessDecisionManager {
 
     @Override
     public boolean supports(ConfigAttribute attribute) {
-        return false;
+        return true;
     }
 
     @Override
     public boolean supports(Class<?> clazz) {
-        return false;
+        return true;
     }
 }

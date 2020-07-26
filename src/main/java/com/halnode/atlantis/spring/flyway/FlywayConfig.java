@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import javax.sql.DataSource;
 
 /**
- * Configuration class for migrating sql schemas using flyway during startup
+ * Configuration class for migrating sql schemas using flyway during application startup.
  *
  * @author Gowtham
  */

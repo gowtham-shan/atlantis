@@ -56,8 +56,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .withObjectPostProcessor(new ObjectPostProcessor<FilterSecurityInterceptor>() {
                     public <O extends FilterSecurityInterceptor> O postProcess(O fsi) {
-                        FilterInvocationSecurityMetadataSource newSource = new CustomFilterInvocationSecurityMetadataSource();
-                        fsi.setSecurityMetadataSource(newSource);
+                        FilterInvocationSecurityMetadataSource metadataSource = new CustomFilterInvocationSecurityMetadataSource();
+                        fsi.setSecurityMetadataSource(metadataSource);
                         fsi.setAccessDecisionManager(new CustomAccessDecisionManager());
                         return fsi;
                     }
