@@ -2,6 +2,7 @@ package com.halnode.atlantis.spring.exception;
 
 import com.halnode.atlantis.core.constants.ErrorResponse;
 import com.halnode.atlantis.core.exception.ResourceNotFoundException;
+import com.halnode.atlantis.core.exception.UserNameAlreadyExistsException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -40,6 +41,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException exception, HttpHeaders headers, HttpStatus status, WebRequest request) {
         String message = exception.getBindingResult().getFieldErrors().get(0).getDefaultMessage();
         ErrorResponse errorResponse = new ErrorResponse(message, LocalDateTime.now());
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(UserNameAlreadyExistsException.class)
+    public final ResponseEntity<?> handleUserNameAlreadyExistsException(UserNameAlreadyExistsException exception) {
+        ErrorResponse errorResponse = new ErrorResponse(exception.getLocalizedMessage(), LocalDateTime.now());
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 }

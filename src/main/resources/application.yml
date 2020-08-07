@@ -19,12 +19,12 @@ spring:
     hibernate:
       ddl-auto: none
     database-platform: org.hibernate.dialect.PostgreSQLDialect
-    show-sql: true
     properties:
       org:
         hibernate:
           envers:
             audit_strategy: org.hibernate.envers.strategy.ValidityAuditStrategy
+    show-sql: true
 logging:
   file:
     path: logs

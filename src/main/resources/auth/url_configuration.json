@@ -1,29 +1,27 @@
 [
   {
     "url": "/resources/**",
-    "method": null,
+    "methods": null,
     "roles": null
   },
   {
     "url": "/api/admin/organization",
-    "method": "POST",
+    "methods": ["POST"],
     "roles": null
   },
   {
     "url": "/auth/obtain-token",
-    "method": "POST",
+    "methods": ["POST"],
     "roles": null
   },
   {
     "url": "/api/admin/**",
-    "method": null,
-    "roles": [
-      "ROLE_ADMIN"
-    ]
+    "methods": null,
+    "roles": ["ROLE_ADMIN"]
   },
   {
     "url": "/",
-    "method": null,
+    "methods": null,
     "roles": null
   }
 ]

@@ -1,5 +1,7 @@
 package com.halnode.atlantis.core.service;
 
+import com.halnode.atlantis.core.constants.UserType;
+import com.halnode.atlantis.core.exception.UserNameAlreadyExistsException;
 import com.halnode.atlantis.core.persistence.model.Organization;
 import com.halnode.atlantis.core.persistence.model.Role;
 import com.halnode.atlantis.core.persistence.model.User;
@@ -9,6 +11,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.repository.support.JpaRepositoryFactory;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -50,36 +53,78 @@ public class UserService {
     @Transactional
     public User saveUser(User user) {
         if (!ObjectUtils.isEmpty(user.getOrganization())) {
-            return this.saveUser(user, user.getOrganization(), user.getIsAdmin());
+            return this.saveUser(user, user.getOrganization(), user.getUserType());
         }
         return null;
     }
 
+    public EntityManager getEntityManager(String schemaName){
+        EntityManagerFactory emf = localContainerEntityManagerFactoryBean.getNativeEntityManagerFactory();
+        EntityManager entityManager = emf.createEntityManager();
+        Query query;
+        entityManager.getTransaction().begin();
+        query = entityManager.createNativeQuery(String.format("SET SCHEMA \'%s\';", schemaName));
+        query.executeUpdate();
+        return entityManager;
+    }
+
     @Transactional
-    public User saveUser(User user, Organization organization, boolean isAdmin) {
+    public User saveUser(User user, Organization organization, UserType userType) {
         String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
         user.setOrganization(organization);
-        EntityManagerFactory emf = localContainerEntityManagerFactoryBean.getNativeEntityManagerFactory();
-        EntityManager entityManager = emf.createEntityManager();
-        JpaRepositoryFactory jpaRepositoryFactory = new JpaRepositoryFactory(entityManager);
-        Query query;
-        entityManager.getTransaction().begin();
-        query = entityManager.createNativeQuery(String.format("SET SCHEMA \'%s\';", user.getOrganization().getName()));
-        query.executeUpdate();
-        Role role = null;
-        if (isAdmin) {
-            RoleRepository roleRepository = jpaRepositoryFactory.getRepository(RoleRepository.class);
+        Role role;
+        EntityManager entityManager=this.getEntityManager(user.getOrganization().getName());
+        JpaRepositoryFactory jpaRepositoryFactory =new JpaRepositoryFactory(entityManager);
+
+        RoleRepository roleRepository = jpaRepositoryFactory.getRepository(RoleRepository.class);
+        if (UserType.ADMIN.equals(userType)) {
             role = roleRepository.findByName("ROLE_ADMIN");
+        }else if(UserType.STAFF.equals(userType)){
+            role=roleRepository.findByName("ROLE_STAFF");
+        }else if(UserType.CUSTOMER.equals(userType)){
+            role=roleRepository.findByName("ROLE_CUSTOMER");
+        }else{
+            String type="ROLE_"+userType.toString();
+            role=roleRepository.findByName(type);
         }
         user.setRoles(new HashSet<>(Arrays.asList(role)));
-        user.setIsAdmin(isAdmin);
+        user.setUserType(userType);
         user.setActive(true);
         UserRepository userRepository = jpaRepositoryFactory.getRepository(UserRepository.class);
         User savedUser = userRepository.save(user);
         entityManager.getTransaction().commit();
         entityManager.close();
         return savedUser;
+    }
+
+
+    public User updateUser(User newUser){
+        EntityManager entityManager = this.getEntityManager(newUser.getOrganization().getName());
+        JpaRepositoryFactory jpaRepositoryFactory = new JpaRepositoryFactory(entityManager);
+        UserRepository userRepository = jpaRepositoryFactory.getRepository(UserRepository.class);
+        Optional<User> optionalUser=userRepository.findById(newUser.getId());
+        if(optionalUser.isPresent()){
+            try{
+                User userFromDb=optionalUser.get();
+                if(!bCryptPasswordEncoder.encode(newUser.getPassword()).equals(userFromDb.getPassword())){
+                    userFromDb.setPassword(bCryptPasswordEncoder.encode(newUser.getPassword()));
+                }
+                userFromDb.setActive(newUser.isActive());
+                userFromDb.setUserName(newUser.getUserName());
+                userFromDb.setRoles(newUser.getRoles());
+                userFromDb.setMobileNumber(newUser.getMobileNumber());
+                userFromDb.setEmail(newUser.getEmail());
+                userFromDb.setName(newUser.getName());
+                User updatedUser=userRepository.save(userFromDb);
+                entityManager.getTransaction().commit();
+                entityManager.close();
+                return updatedUser;
+            }catch (Exception e){
+                throw new UserNameAlreadyExistsException("User with a user name already exists");
+            }
+        }
+        throw new UsernameNotFoundException("User is not found");
     }
 
     public void deleteUser(Long id) {

@@ -18,5 +18,21 @@ public class RoleService {
     public List<Role> getRoles() {
         return roleRepository.findAll();
     }
+
+    public Role saveRole(Role role){
+        return roleRepository.save(role);
+    }
+
+    public Role updateRole(Role newRole){
+        Role roleFromDb=roleRepository.findById(newRole.getId()).get();
+        roleFromDb.setDescription(newRole.getDescription());
+        roleFromDb.setName(newRole.getName());
+        roleFromDb.setPrivileges(newRole.getPrivileges());
+        return saveRole(roleFromDb);
+    }
+
+    public void deleteRoleById(Long id){
+        roleRepository.deleteById(id);
+    }
     
 }

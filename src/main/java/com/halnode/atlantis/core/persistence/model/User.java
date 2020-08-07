@@ -1,5 +1,7 @@
 package com.halnode.atlantis.core.persistence.model;
 
+import com.halnode.atlantis.core.constants.IsValidMobileNumber;
+import com.halnode.atlantis.core.constants.UserType;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -33,28 +35,22 @@ public class User {
     @Transient
     private String confirmPassword;
 
-    @Column(name = "first_name")
-    @NotEmpty(message = "First name must not be null or empty")
+    @Column(name = "name")
+    @NotEmpty(message = "Name should not be null or empty")
     @Size(max = 32)
-    private String firstName;
-
-    @Column(name = "last_name")
-    @Size(max = 32)
-    private String lastName;
+    private String name;
 
     @Column(name = "mobile_number", unique = true)
+    @IsValidMobileNumber
     private Long mobileNumber;
 
     private String email;
-
-    @Column(name = "country_code")
-    private String countryCode;
 
     @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     @JoinColumn(name = "org_id")
     private Organization organization;
 
-    @ManyToMany(cascade = {CascadeType.MERGE}, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = {CascadeType.MERGE,CascadeType.REMOVE}, fetch = FetchType.EAGER)
     @JoinTable(
             name = "auth_user_roles",
             joinColumns = {@JoinColumn(name = "user_id")},
@@ -63,6 +59,6 @@ public class User {
 
     private boolean active;
 
-    @Column(name = "is_admin")
-    private Boolean isAdmin;
+    @Column(name="user_type")
+    private UserType userType;
 }

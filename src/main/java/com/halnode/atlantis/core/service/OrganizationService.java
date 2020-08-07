@@ -1,5 +1,6 @@
 package com.halnode.atlantis.core.service;
 
+import com.halnode.atlantis.core.constants.UserType;
 import com.halnode.atlantis.core.persistence.dto.OrganizationDTO;
 import com.halnode.atlantis.core.persistence.model.Organization;
 import com.halnode.atlantis.core.persistence.model.User;
@@ -50,7 +51,7 @@ public class OrganizationService {
         this.initDatabaseSchema(created.getName());
         User user = organizationDTO.getUser();
         if (!ObjectUtils.isEmpty(user)) {
-            userService.saveUser(user, created, true);
+            userService.saveUser(user, created, UserType.ADMIN);
         }
         return created;
     }

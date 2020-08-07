@@ -21,7 +21,7 @@ public class Privilege {
     private Long id;
 
     @Column(unique = true)
-    @NotEmpty(message = "Privilege Name Must not be null or empty")
+    @NotEmpty(message = "Privilege Name should not be null or empty")
     @Size(max = 32)
     private String name;
 }

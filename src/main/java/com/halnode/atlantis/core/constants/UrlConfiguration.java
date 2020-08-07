@@ -12,7 +12,7 @@ import java.util.List;
 public class UrlConfiguration {
 
     private String url;
-    private String method;
+    private List<String> methods;
     private List<String> roles;
 
 }

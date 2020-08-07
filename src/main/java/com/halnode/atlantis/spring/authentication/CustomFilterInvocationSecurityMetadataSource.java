@@ -47,7 +47,13 @@ public class CustomFilterInvocationSecurityMetadataSource implements FilterInvoc
             for (UrlConfiguration config : inputConfigurations) {
                 String accessRoles = StringUtils.collectionToDelimitedString(config.getRoles(), ",");
                 List<ConfigAttribute> configAttributes = SecurityConfig.createListFromCommaDelimitedString(accessRoles);
-                configurationMap.put(new AntPathRequestMatcher(config.getUrl(), config.getMethod()), configAttributes);
+                if(ObjectUtils.isEmpty(config.getMethods())){
+                    configurationMap.put(new AntPathRequestMatcher(config.getUrl(),null,false),configAttributes);
+                }else{
+                    for(String method:config.getMethods()){
+                        configurationMap.put(new AntPathRequestMatcher(config.getUrl(), method,false), configAttributes);
+                    }
+                }
             }
         } catch (Exception e) {
             log.error("Error occurred while reading url configurations", e);
