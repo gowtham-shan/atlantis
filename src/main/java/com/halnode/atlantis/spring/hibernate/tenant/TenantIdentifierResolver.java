@@ -20,7 +20,6 @@ public class TenantIdentifierResolver implements CurrentTenantIdentifierResolver
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (!ObjectUtils.isEmpty(auth)) {
             if (!(auth instanceof AnonymousAuthenticationToken)) {
-                String currentUserName = auth.getName();
                 CustomUserDetails userDetails = (CustomUserDetails) auth.getPrincipal();
                 return userDetails.getUser().getOrganization().getName();
             }

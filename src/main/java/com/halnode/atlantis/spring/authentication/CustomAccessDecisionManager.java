@@ -11,7 +11,6 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 import java.util.Collection;
-import java.util.Iterator;
 
 /**
  * Implementation for {@link AccessDecisionManager}.
@@ -32,9 +31,8 @@ public class CustomAccessDecisionManager implements AccessDecisionManager {
         if (ObjectUtils.isEmpty(configAttributes)) {
             return;
         }
-        Iterator<ConfigAttribute> iterator = configAttributes.iterator();
-        while (iterator.hasNext()) {
-            String neededRole = iterator.next().getAttribute();
+        for (ConfigAttribute configAttribute : configAttributes) {
+            String neededRole = configAttribute.getAttribute();
             if (!StringUtils.isEmpty(neededRole)) {
                 for (GrantedAuthority grantedAuthority : authentication.getAuthorities()) {
                     if (neededRole.trim().equalsIgnoreCase(grantedAuthority.getAuthority().trim())) {

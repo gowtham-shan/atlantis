@@ -19,17 +19,15 @@ public class FlywayConfig {
 
     @Bean
     CommandLineRunner commandLineRunner(OrganizationRepository repository, DataSource dataSource) {
-        return args -> {
-            repository.findAll().forEach(organization -> {
-                String schema = organization.getName();
-                Flyway flyway = Flyway.configure()
-                        .locations("/db/migration/organizations")
-                        .dataSource(dataSource)
-                        .schemas(schema)
-                        .load();
-                flyway.migrate();
-            });
-        };
+        return args -> repository.findAll().forEach(organization -> {
+            String schema = organization.getName();
+            Flyway flyway = Flyway.configure()
+                    .locations("/db/migration/organizations")
+                    .dataSource(dataSource)
+                    .schemas(schema)
+                    .load();
+            flyway.migrate();
+        });
     }
 
 }

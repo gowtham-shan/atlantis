@@ -44,24 +44,23 @@ public class UserDetailsServiceImpl implements UserDetailsService {
          */
         if (SecurityContextHolder.getContext().getAuthentication() != null &&
                 !(SecurityContextHolder.getContext().getAuthentication() instanceof AnonymousAuthenticationToken)) {
-            UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            return userDetails;
+            return (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         }
 
-        User user = null;
+        User user;
 
         //Separate user_name and org_name(i.e., SCHEMA NAME) from the input
         //TODO: Have to redirect the user to login page if exception is thrown in this method.
         
         String currentUserName = userIdentifier.substring(0, userIdentifier.lastIndexOf("@"));
-        String currentOrgName = userIdentifier.substring(userIdentifier.lastIndexOf("@") + 1, userIdentifier.length());
+        String currentOrgName = userIdentifier.substring(userIdentifier.lastIndexOf("@") + 1);
 
         //Setup the current schema
         EntityManagerFactory emf = localContainerEntityManagerFactoryBean.getNativeEntityManagerFactory();
         EntityManager entityManager = emf.createEntityManager();
         Query query;
         entityManager.getTransaction().begin();
-        query = entityManager.createNativeQuery(String.format("SET SCHEMA \'%s\';", currentOrgName));
+        query = entityManager.createNativeQuery(String.format("SET SCHEMA '%s';", currentOrgName));
         query.executeUpdate();
 
         //Get the user from the db

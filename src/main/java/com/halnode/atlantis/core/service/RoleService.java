@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -24,11 +25,15 @@ public class RoleService {
     }
 
     public Role updateRole(Role newRole){
-        Role roleFromDb=roleRepository.findById(newRole.getId()).get();
-        roleFromDb.setDescription(newRole.getDescription());
-        roleFromDb.setName(newRole.getName());
-        roleFromDb.setPrivileges(newRole.getPrivileges());
-        return saveRole(roleFromDb);
+        Optional<Role> role=roleRepository.findById(newRole.getId());
+        if(role.isPresent()){
+            Role roleFromDb=role.get();
+            roleFromDb.setDescription(newRole.getDescription());
+            roleFromDb.setName(newRole.getName());
+            roleFromDb.setPrivileges(newRole.getPrivileges());
+            return saveRole(roleFromDb);
+        }
+        return null;
     }
 
     public void deleteRoleById(Long id){

@@ -11,7 +11,7 @@ import java.sql.SQLException;
 @Component
 public class TenantConnectionProvider implements MultiTenantConnectionProvider {
 
-    private DataSource datasource;
+    private final DataSource datasource;
 
     public TenantConnectionProvider(DataSource dataSource) {
         this.datasource = dataSource;
@@ -31,14 +31,14 @@ public class TenantConnectionProvider implements MultiTenantConnectionProvider {
     public Connection getConnection(String tenantIdentifier) throws SQLException {
         final Connection connection = getAnyConnection();
         connection.createStatement()
-                .execute(String.format("SET SCHEMA \'%s\';", tenantIdentifier));
+                .execute(String.format("SET SCHEMA '%s';", tenantIdentifier));
         return connection;
     }
 
     @Override
     public void releaseConnection(String tenantIdentifier, Connection connection) throws SQLException {
         connection.createStatement()
-                .execute(String.format("SET SCHEMA \'%s\';", Constants.DEFAULT_TENANT));
+                .execute(String.format("SET SCHEMA '%s';", Constants.DEFAULT_TENANT));
         releaseAnyConnection(connection);
     }
 

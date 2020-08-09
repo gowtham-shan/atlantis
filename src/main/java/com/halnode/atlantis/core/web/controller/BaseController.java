@@ -28,10 +28,10 @@ public class BaseController {
     private final JwtUtil jwtUtil;
 
     @NonNull
-    private AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
 
     @NonNull
-    private UserDetailsServiceImpl userDetailsService;
+    private final UserDetailsServiceImpl userDetailsService;
 
     @GetMapping
     public String landingPage() {

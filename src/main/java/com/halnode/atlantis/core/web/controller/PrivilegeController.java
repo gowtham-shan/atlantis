@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class PrivilegeController {
 
     @NonNull
-    private PrivilegeRepository privilegeRepository;
+    private final PrivilegeRepository privilegeRepository;
 
     @GetMapping
     public ResponseEntity<?> getAllPrivileges(){

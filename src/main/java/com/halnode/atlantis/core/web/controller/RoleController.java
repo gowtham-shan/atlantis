@@ -1,5 +1,6 @@
 package com.halnode.atlantis.core.web.controller;
 
+import com.halnode.atlantis.core.exception.ResourceNotFoundException;
 import com.halnode.atlantis.core.persistence.model.Role;
 import com.halnode.atlantis.core.persistence.repository.RoleRepository;
 import com.halnode.atlantis.core.service.RoleService;
@@ -30,7 +31,7 @@ public class RoleController {
     @GetMapping("/{id}")
     public ResponseEntity<Role> getRole(@PathVariable Long id) {
         Optional<Role> role = roleRepository.findById(id);
-        return ResponseEntity.ok(role.get());
+        return ResponseEntity.ok(role.orElseThrow());
     }
 
     @PostMapping

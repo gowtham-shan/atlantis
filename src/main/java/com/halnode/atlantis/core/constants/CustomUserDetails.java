@@ -27,9 +27,7 @@ public class CustomUserDetails implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
         if (!ObjectUtils.isEmpty(user.getRoles())) {
-            user.getRoles().forEach(role -> {
-                grantedAuthorities.add(new SimpleGrantedAuthority(role.getName()));
-            });
+            user.getRoles().forEach(role -> grantedAuthorities.add(new SimpleGrantedAuthority(role.getName())));
         }
         return grantedAuthorities;
     }

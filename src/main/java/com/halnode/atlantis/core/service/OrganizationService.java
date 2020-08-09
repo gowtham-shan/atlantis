@@ -35,7 +35,7 @@ public class OrganizationService {
      * Apply migration scripts for newly created organization.
      * Must be called for every newly created organization
      *
-     * @param schema
+     * @param schema schema name
      */
     public void initDatabaseSchema(String schema) {
         Flyway flyway = Flyway.configure()
