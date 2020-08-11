@@ -26,6 +26,7 @@ public class Role {
     @Size(max = 32)
     private String name;
 
+    @Column(length = 256)
     private String description;
 
     @ManyToMany(cascade = {CascadeType.MERGE}, fetch = FetchType.EAGER)

@@ -35,7 +35,7 @@ public class CustomAccessDecisionManager implements AccessDecisionManager {
             String neededRole = configAttribute.getAttribute();
             if (!StringUtils.isEmpty(neededRole)) {
                 for (GrantedAuthority grantedAuthority : authentication.getAuthorities()) {
-                    if (neededRole.trim().equalsIgnoreCase(grantedAuthority.getAuthority().trim())) {
+                    if (neededRole.equalsIgnoreCase(grantedAuthority.getAuthority())) {
                         return;
                     }
                 }

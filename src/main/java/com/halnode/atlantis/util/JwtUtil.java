@@ -37,7 +37,7 @@ public class JwtUtil {
     }
 
     private String generateToken(Map<String, Object> claims, String subject) {
-        return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(dateUtil.getCurrentDateAsDate()).setExpiration(dateUtil.getDateFromMills(dateUtil.getCurrentDateInMills() + Constants.JWT_TOKEN_VALIDITY))
+        return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(dateUtil.getCurrentDateAsDate()).setExpiration(null)
                 .signWith(SignatureAlgorithm.HS256, Constants.JWT_SECRET_KEY).compact();
     }
 
@@ -48,7 +48,7 @@ public class JwtUtil {
 
     public boolean validateToken(String token, String userIdentifier) {
         final String userName = this.extractUserName(token);
-        return (userName.equals(userIdentifier)) && !isTokenExpired(token);
+        return (userName.equals(userIdentifier));
     }
 
     private boolean isTokenExpired(String token) {

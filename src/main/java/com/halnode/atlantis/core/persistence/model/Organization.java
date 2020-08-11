@@ -18,6 +18,7 @@ public class Organization {
     private Long id;
 
     @NotEmpty(message = "Organization name must not be null or empty")
+    @Column(nullable = false,length = 128)
     private String name;
     
 }

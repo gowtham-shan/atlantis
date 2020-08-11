@@ -10,7 +10,7 @@ import javax.persistence.*;
 @Entity
 @RevisionEntity(CustomRevisionListener.class)
 @Data
-@Table(name = "custom_rev_info", schema = "public")
+@Table(name = "revision_info", schema = "public")
 public class CustomRevisionEntity {
     @Id
     @RevisionNumber
@@ -19,5 +19,7 @@ public class CustomRevisionEntity {
 
     @RevisionTimestamp
     private long timestamp;
+
+    @Column(name = "user_name",length = 32)
     private String userName;
 }

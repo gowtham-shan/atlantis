@@ -11,6 +11,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 
+import static com.halnode.atlantis.util.Constants.DEFAULT_TENANT;
+
 @Component
 @RequiredArgsConstructor
 public class TenantIdentifierResolver implements CurrentTenantIdentifierResolver {
@@ -18,15 +20,11 @@ public class TenantIdentifierResolver implements CurrentTenantIdentifierResolver
     @Override
     public String resolveCurrentTenantIdentifier() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (!ObjectUtils.isEmpty(auth)) {
-            if (!(auth instanceof AnonymousAuthenticationToken)) {
-                CustomUserDetails userDetails = (CustomUserDetails) auth.getPrincipal();
-                return userDetails.getUser().getOrganization().getName();
-            }
-            return Constants.DEFAULT_TENANT;
+        if (!ObjectUtils.isEmpty(auth) && !(auth instanceof AnonymousAuthenticationToken)) {
+            CustomUserDetails userDetails = (CustomUserDetails) auth.getPrincipal();
+            return userDetails.getUser().getOrganization().getName();
         }
-
-        return Constants.DEFAULT_TENANT;
+        return DEFAULT_TENANT;
     }
 
     /**

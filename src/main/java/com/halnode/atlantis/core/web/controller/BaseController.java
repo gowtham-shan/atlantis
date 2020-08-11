@@ -34,8 +34,8 @@ public class BaseController {
     private final UserDetailsServiceImpl userDetailsService;
 
     @GetMapping
-    public String landingPage() {
-        return "landing";
+    public ResponseEntity<?> landingPage() {
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/auth/obtain-token")

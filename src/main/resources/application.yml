@@ -2,11 +2,6 @@ spring:
   mustache:
     suffix: .html
     cache: false
-  datasource:
-    driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/atlantis
-    username: atlantis
-    password: Wecandoit
   jackson:
     serialization:
       fail-on-empty-beans: false
@@ -24,7 +19,7 @@ spring:
         hibernate:
           envers:
             audit_strategy: org.hibernate.envers.strategy.ValidityAuditStrategy
-    show-sql: true
+            audit_table_suffix: _audit
 logging:
   file:
     path: logs
@@ -48,6 +43,11 @@ server:
 ---
 spring:
   profiles: development
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/atlantis
+    username: atlantis
+    password: Wecandoit
   devtools:
     livereload:
       enabled: true
