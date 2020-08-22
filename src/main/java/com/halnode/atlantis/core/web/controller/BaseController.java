@@ -1,8 +1,10 @@
 package com.halnode.atlantis.core.web.controller;
 
-import com.halnode.atlantis.core.constants.JwtRequest;
-import com.halnode.atlantis.core.constants.JwtResponse;
-import com.halnode.atlantis.spring.authentication.UserDetailsServiceImpl;
+import com.halnode.atlantis.core.exception.ResourceNotFoundException;
+import com.halnode.atlantis.core.persistence.model.Organization;
+import com.halnode.atlantis.core.persistence.repository.OrganizationRepository;
+import com.halnode.atlantis.spring.authentication.jwt.JwtRequest;
+import com.halnode.atlantis.spring.authentication.jwt.JwtResponse;
 import com.halnode.atlantis.util.JwtUtil;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -12,14 +14,11 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
-@Controller
+@RestController
 @RequestMapping("/")
 @RequiredArgsConstructor
 public class BaseController {
@@ -30,15 +29,18 @@ public class BaseController {
     @NonNull
     private final AuthenticationManager authenticationManager;
 
-    @NonNull
-    private final UserDetailsServiceImpl userDetailsService;
-
     @GetMapping
     public ResponseEntity<?> landingPage() {
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok("Hello World !!!");
     }
 
-    @PostMapping("/auth/obtain-token")
+    @CrossOrigin(origins = "http://localhost:8080")
+    @GetMapping("api/auth/load-user/")
+    public String test(){
+        return "WELCOME";
+    }
+
+    @PostMapping("api/auth/obtain-token")
     public ResponseEntity<?> authentication(@Valid @RequestBody JwtRequest jwtRequest) {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(jwtRequest.getUserName(), jwtRequest.getPassword()));
@@ -49,5 +51,13 @@ public class BaseController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Authentication failed");
         }
+    }
+
+    @NonNull
+    private OrganizationRepository organizationRepository;
+
+    @PostMapping("exception")
+    public ResponseEntity<?> excption(@Valid @RequestBody Organization organization){
+        return ResponseEntity.ok(organizationRepository.save(organization));
     }
 }

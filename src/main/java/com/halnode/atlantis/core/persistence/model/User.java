@@ -1,6 +1,6 @@
 package com.halnode.atlantis.core.persistence.model;
 
-import com.halnode.atlantis.core.constants.IsValidMobileNumber;
+import com.halnode.atlantis.core.annotations.validation.ValidMobileNumber;
 import com.halnode.atlantis.core.constants.UserType;
 import lombok.Getter;
 import lombok.Setter;
@@ -41,7 +41,7 @@ public class User {
     private String name;
 
     @Column(name = "mobile_number", unique = true)
-    @IsValidMobileNumber
+    @ValidMobileNumber
     private Long mobileNumber;
 
     private String email;

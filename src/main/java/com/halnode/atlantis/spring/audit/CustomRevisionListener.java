@@ -1,4 +1,4 @@
-package com.halnode.atlantis.core.audit;
+package com.halnode.atlantis.spring.audit;
 
 import com.halnode.atlantis.util.Constants;
 import org.hibernate.envers.RevisionListener;

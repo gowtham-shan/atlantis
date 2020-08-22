@@ -1,4 +1,4 @@
-package com.halnode.atlantis.core.constants;
+package com.halnode.atlantis.spring.authentication.jwt;
 
 import lombok.Getter;
 import lombok.Setter;

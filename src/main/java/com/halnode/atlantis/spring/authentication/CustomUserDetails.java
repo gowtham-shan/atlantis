@@ -1,4 +1,4 @@
-package com.halnode.atlantis.core.constants;
+package com.halnode.atlantis.spring.authentication;
 
 import com.halnode.atlantis.core.persistence.model.User;
 import lombok.Getter;

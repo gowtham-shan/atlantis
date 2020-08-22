@@ -5,12 +5,22 @@
     "roles": null
   },
   {
+    "url": "/api/auth/login/",
+    "methods": null,
+    "roles": null
+  },
+  {
+    "url": "/api/auth/logout/",
+    "methods": null,
+    "roles": null
+  },
+  {
     "url": "/api/admin/organization",
     "methods": ["POST"],
     "roles": null
   },
   {
-    "url": "/auth/obtain-token",
+    "url": "/api/auth/obtain-token",
     "methods": ["POST"],
     "roles": null
   },
@@ -21,6 +31,11 @@
   },
   {
     "url": "/",
+    "methods": null,
+    "roles": null
+  },
+  {
+    "url": "/exception",
     "methods": null,
     "roles": null
   }

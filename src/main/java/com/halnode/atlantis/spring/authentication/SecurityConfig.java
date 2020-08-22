@@ -1,5 +1,6 @@
 package com.halnode.atlantis.spring.authentication;
 
+import com.halnode.atlantis.spring.authentication.jwt.JwtRequestFilter;
 import com.halnode.atlantis.util.Constants;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +17,21 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+
+import java.util.Arrays;
+import java.util.Collections;
+
+import static org.springframework.security.config.Customizer.withDefaults;
 
 /**
  * Configuration class for spring security.
@@ -43,14 +58,33 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return authenticationManager();
     }
 
+    @Bean
+    public AuthFilter authFilter() throws Exception{
+        AuthFilter authFilter=new AuthFilter();
+        authFilter.setAuthenticationManager(this.authenticationManager());
+        authFilter.setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher("/api/auth/login","POST"));
+        return authFilter;
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList("*"));
+        configuration.setAllowedMethods(Arrays.asList("GET","POST","PUT","DELETE"));
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
+
     @NonNull
     private final JwtRequestFilter jwtRequestFilter;
+
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .httpBasic()
-                .and()
+                .cors(withDefaults())
+                .addFilterBefore(authFilter(), UsernamePasswordAuthenticationFilter.class)
                 .csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                 .and()
                 .authorizeRequests()
@@ -64,16 +98,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 })
                 .anyRequest().authenticated()
                 .and()
-                .formLogin()
+                .formLogin().loginProcessingUrl("/api/auth/login/").permitAll()
+                .defaultSuccessUrl("/")
                 .and()
-                .logout().deleteCookies("JSESSIONID")
+                .logout()
+                .logoutRequestMatcher(new AntPathRequestMatcher("/api/auth/logout/")).permitAll()
+                .invalidateHttpSession(true)
+                .deleteCookies("JSESSIONID")
                 .permitAll()
                 .and()
                 .rememberMe()
                 .key(Constants.REMEMBER_ME_SECRET_KEY).userDetailsService(userDetailsService)
                 .tokenValiditySeconds(Constants.REMEMBER_ME_TOKEN_VALIDITY)
                 .and()
-                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class).httpBasic();
 
     }
 

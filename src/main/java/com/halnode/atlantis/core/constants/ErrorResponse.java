@@ -22,4 +22,8 @@ public class ErrorResponse {
 
     private LocalDateTime timestamp;
 
+    private String url;
+
+    //package error class
+
 }

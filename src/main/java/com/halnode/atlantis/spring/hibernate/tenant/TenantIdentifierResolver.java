@@ -1,8 +1,7 @@
 package com.halnode.atlantis.spring.hibernate.tenant;
 
 
-import com.halnode.atlantis.core.constants.CustomUserDetails;
-import com.halnode.atlantis.util.Constants;
+import com.halnode.atlantis.spring.authentication.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.context.spi.CurrentTenantIdentifierResolver;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;

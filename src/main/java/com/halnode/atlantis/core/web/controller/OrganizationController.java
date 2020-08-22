@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.PostUpdate;
 import javax.validation.Valid;
 
 
@@ -27,6 +28,11 @@ public class OrganizationController {
     @PostMapping
     public ResponseEntity<?> createOrganization(@Valid @RequestBody OrganizationDTO organizationDTO) {
         return ResponseEntity.ok(organizationService.saveOrganization(organizationDTO));
+    }
+
+    @PostMapping("/save")
+    public ResponseEntity<?> createOrganization(@Valid @RequestBody Organization organization){
+        return ResponseEntity.ok(organizationService.saveOrganization(organization));
     }
 
     @PutMapping

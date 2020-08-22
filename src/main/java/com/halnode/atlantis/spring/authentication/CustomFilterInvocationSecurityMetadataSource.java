@@ -2,28 +2,19 @@ package com.halnode.atlantis.spring.authentication;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.halnode.atlantis.core.constants.UrlConfiguration;
-import com.halnode.atlantis.util.Constants;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
+import com.halnode.atlantis.spring.authorization.AuthorizationConfig;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
 import org.springframework.security.web.FilterInvocation;
 import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
-import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
-import org.springframework.util.ResourceUtils;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
+import java.io.InputStream;
 import java.util.*;
 
 import static com.halnode.atlantis.util.Constants.URL_CONFIGURATIONS_FILE_LOCATION;
@@ -47,13 +38,12 @@ public class CustomFilterInvocationSecurityMetadataSource implements FilterInvoc
      * in order to decide the access for the requested url ( REQUESTED URL and it's info are fetched from HttpServletRequest).
      */
     private void loadConfigurationMap() {
-        try {
+        try ( InputStream inputStream = getClass().getResourceAsStream(URL_CONFIGURATIONS_FILE_LOCATION)){
             configurationMap = new LinkedHashMap<>();
             ObjectMapper objectMapper = new ObjectMapper();
-            File file = ResourceUtils.getFile(Constants.URL_CONFIGURATIONS_FILE_LOCATION);
-            List<UrlConfiguration> inputConfigurations = objectMapper.readValue(file, new TypeReference<>() {
+            List<AuthorizationConfig> inputConfigurations = objectMapper.readValue(inputStream, new TypeReference<>() {
             });
-            for (UrlConfiguration config : inputConfigurations) {
+            for (AuthorizationConfig config : inputConfigurations) {
                 String accessRoles = StringUtils.collectionToDelimitedString(config.getRoles(), ",");
                 List<ConfigAttribute> configAttributes = SecurityConfig.createListFromCommaDelimitedString(accessRoles);
                 if(ObjectUtils.isEmpty(config.getMethods())){

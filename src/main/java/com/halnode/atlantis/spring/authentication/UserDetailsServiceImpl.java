@@ -1,6 +1,5 @@
 package com.halnode.atlantis.spring.authentication;
 
-import com.halnode.atlantis.core.constants.CustomUserDetails;
 import com.halnode.atlantis.core.persistence.model.User;
 import com.halnode.atlantis.core.persistence.repository.UserRepository;
 import lombok.NonNull;

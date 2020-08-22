@@ -1,5 +1,6 @@
-package com.halnode.atlantis.spring.authentication;
+package com.halnode.atlantis.spring.authentication.jwt;
 
+import com.halnode.atlantis.spring.authentication.UserDetailsServiceImpl;
 import com.halnode.atlantis.util.JwtUtil;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -64,6 +65,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 logger.error("Error occurred while validating the auth token");
             }
         }
+
         filterChain.doFilter(request, response);
     }
 }

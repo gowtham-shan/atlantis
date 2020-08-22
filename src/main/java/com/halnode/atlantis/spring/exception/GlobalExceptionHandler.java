@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolationException;
 import java.time.LocalDateTime;
 
@@ -26,27 +27,30 @@ import java.time.LocalDateTime;
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(ResourceNotFoundException.class)
-    public final ResponseEntity<?> handleResourceNotFoundException(ResourceNotFoundException exception) {
-        ErrorResponse errorResponse = new ErrorResponse(exception.getMessage(), LocalDateTime.now());
+    public final ResponseEntity<?> handleResourceNotFoundException(ResourceNotFoundException exception, HttpServletRequest request) {
+        ErrorResponse errorResponse = new ErrorResponse(exception.getMessage(), LocalDateTime.now(),request.getRequestURI());
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
-    public final ResponseEntity<?> handleConstraintViolationException(ConstraintViolationException exception) {
-        ErrorResponse errorResponse = new ErrorResponse(exception.getLocalizedMessage(), LocalDateTime.now());
+    public final ResponseEntity<?> handleConstraintViolationException(ConstraintViolationException exception,HttpServletRequest request) {
+        exception.getConstraintViolations().forEach(error->{
+            System.out.println(error.getInvalidValue());
+        });
+        ErrorResponse errorResponse = new ErrorResponse(exception.getLocalizedMessage(), LocalDateTime.now(),request.getRequestURI());
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException exception, HttpHeaders headers, HttpStatus status, WebRequest request) {
         String message = exception.getBindingResult().getFieldErrors().get(0).getDefaultMessage();
-        ErrorResponse errorResponse = new ErrorResponse(message, LocalDateTime.now());
+        ErrorResponse errorResponse = new ErrorResponse(message, LocalDateTime.now(),request.getContextPath());
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(UserNameAlreadyExistsException.class)
-    public final ResponseEntity<?> handleUserNameAlreadyExistsException(UserNameAlreadyExistsException exception) {
-        ErrorResponse errorResponse = new ErrorResponse(exception.getLocalizedMessage(), LocalDateTime.now());
+    public final ResponseEntity<?> handleUserNameAlreadyExistsException(UserNameAlreadyExistsException exception,WebRequest request) {
+        ErrorResponse errorResponse = new ErrorResponse(exception.getLocalizedMessage(), LocalDateTime.now(),request.getContextPath());
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 }

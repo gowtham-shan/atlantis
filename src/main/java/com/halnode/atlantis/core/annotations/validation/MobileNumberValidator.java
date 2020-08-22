@@ -1,5 +1,6 @@
-package com.halnode.atlantis.core.constants;
+package com.halnode.atlantis.core.annotations.validation;
 
+import com.halnode.atlantis.core.annotations.validation.ValidMobileNumber;
 import org.springframework.stereotype.Component;
 
 import javax.validation.ConstraintValidator;
@@ -8,10 +9,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Component
-public class MobileNumberValidator implements ConstraintValidator<IsValidMobileNumber,Long> {
+public class MobileNumberValidator implements ConstraintValidator<ValidMobileNumber,Long> {
 
     @Override
-    public void initialize(IsValidMobileNumber constraintAnnotation) {
+    public void initialize(ValidMobileNumber constraintAnnotation) {
 
     }
 

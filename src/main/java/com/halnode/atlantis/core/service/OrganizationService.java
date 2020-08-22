@@ -46,13 +46,21 @@ public class OrganizationService {
         flyway.migrate();
     }
 
+    public Organization saveOrganization(Organization organization){
+        return organizationRepository.save(organization);
+    }
     public Organization saveOrganization(OrganizationDTO organizationDTO) {
         Organization created = organizationRepository.save(organizationDTO.getOrganization());
-        this.initDatabaseSchema(created.getName());
-        User user = organizationDTO.getUser();
-        if (!ObjectUtils.isEmpty(user)) {
-            userService.saveUser(user, created, UserType.ADMIN);
+        try{
+            this.initDatabaseSchema(created.getName());
+            User user = organizationDTO.getUser();
+            if (!ObjectUtils.isEmpty(user)) {
+                userService.saveUser(user, created, UserType.ADMIN);
+            }
+        }catch (Exception e){
+
         }
+
         return created;
     }
 

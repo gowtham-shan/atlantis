@@ -1,4 +1,4 @@
-package com.halnode.atlantis.core.constants;
+package com.halnode.atlantis.spring.authorization;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,7 +9,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-public class UrlConfiguration {
+public class AuthorizationConfig {
 
     private String url;
     private List<String> methods;

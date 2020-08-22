@@ -34,9 +34,6 @@ public class UserService {
     private final UserRepository userRepository;
 
     @NonNull
-    private final RoleRepository roleRepository;
-
-    @NonNull
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     public List<User> getUsers() {

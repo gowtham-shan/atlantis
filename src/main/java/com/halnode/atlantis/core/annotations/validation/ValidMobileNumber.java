@@ -1,4 +1,4 @@
-package com.halnode.atlantis.core.constants;
+package com.halnode.atlantis.core.annotations.validation;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
@@ -8,7 +8,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = MobileNumberValidator.class)
 @Documented
-public @interface IsValidMobileNumber {
+public @interface ValidMobileNumber {
 
     String message() default "Mobile Number is not valid";
 

@@ -1,4 +1,4 @@
-package com.halnode.atlantis.core.audit;
+package com.halnode.atlantis.spring.audit;
 
 import lombok.Data;
 import org.hibernate.envers.RevisionEntity;
