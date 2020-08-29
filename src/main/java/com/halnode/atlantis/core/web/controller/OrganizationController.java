@@ -13,7 +13,7 @@ import javax.validation.Valid;
 
 
 @RestController
-@RequestMapping("/api/admin/organization")
+@RequestMapping("/api/admin/organization/")
 @RequiredArgsConstructor
 public class OrganizationController {
 
@@ -40,7 +40,7 @@ public class OrganizationController {
         return ResponseEntity.ok(organizationService.updateOrganization(organization));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{id}/")
     public ResponseEntity<?> deleteOrganization(@PathVariable Long id) {
         organizationService.deleteOrganization(id);
         return ResponseEntity.ok().build();

@@ -15,12 +15,17 @@
     "roles": null
   },
   {
-    "url": "/api/admin/organization",
+    "url": "/api/auth/load-user/",
+    "methods": ["GET"],
+    "roles": null
+  },
+  {
+    "url": "/api/admin/organization/",
     "methods": ["POST"],
     "roles": null
   },
   {
-    "url": "/api/auth/obtain-token",
+    "url": "/api/auth/obtain-token/",
     "methods": ["POST"],
     "roles": null
   },

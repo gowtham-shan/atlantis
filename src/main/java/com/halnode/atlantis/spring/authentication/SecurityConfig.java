@@ -31,6 +31,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 import java.util.Arrays;
 import java.util.Collections;
 
+import static com.halnode.atlantis.util.Constants.DEFAULT_LOGIN_PROCESSING_URL;
+import static com.halnode.atlantis.util.Constants.DEFAULT_LOGOUT_PROCESSING_URL;
 import static org.springframework.security.config.Customizer.withDefaults;
 
 /**
@@ -62,7 +64,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public AuthFilter authFilter() throws Exception{
         AuthFilter authFilter=new AuthFilter();
         authFilter.setAuthenticationManager(this.authenticationManager());
-        authFilter.setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher("/api/auth/login","POST"));
+        authFilter.setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher(DEFAULT_LOGIN_PROCESSING_URL,"POST"));
         return authFilter;
     }
 
@@ -70,7 +72,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList("*"));
-        configuration.setAllowedMethods(Arrays.asList("GET","POST","PUT","DELETE"));
+        configuration.setAllowedMethods(Arrays.asList("*"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
@@ -98,11 +100,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 })
                 .anyRequest().authenticated()
                 .and()
-                .formLogin().loginProcessingUrl("/api/auth/login/").permitAll()
+                .formLogin().loginProcessingUrl(DEFAULT_LOGIN_PROCESSING_URL)
                 .defaultSuccessUrl("/")
                 .and()
                 .logout()
-                .logoutRequestMatcher(new AntPathRequestMatcher("/api/auth/logout/")).permitAll()
+                .logoutRequestMatcher(new AntPathRequestMatcher(DEFAULT_LOGOUT_PROCESSING_URL))
                 .invalidateHttpSession(true)
                 .deleteCookies("JSESSIONID")
                 .permitAll()

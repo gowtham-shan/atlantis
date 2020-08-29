@@ -13,7 +13,7 @@ import javax.validation.Valid;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/admin/role")
+@RequestMapping("/api/admin/role/")
 @RequiredArgsConstructor
 public class RoleController {
 
@@ -28,7 +28,7 @@ public class RoleController {
         return ResponseEntity.ok(roleService.getRoles());
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{id}/")
     public ResponseEntity<Role> getRole(@PathVariable Long id) {
         Optional<Role> role = roleRepository.findById(id);
         return ResponseEntity.ok(role.orElseThrow());
@@ -45,7 +45,7 @@ public class RoleController {
         return ResponseEntity.ok(roleService.updateRole(role));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{id}/")
     public ResponseEntity<?> deleteRole(@PathVariable Long id) {
         roleService.deleteRoleById(id);
         return ResponseEntity.ok().build();

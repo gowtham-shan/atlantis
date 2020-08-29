@@ -25,5 +25,6 @@ public class ErrorResponse {
     private String url;
 
     //package error class
+    
 
 }

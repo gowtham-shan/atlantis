@@ -21,10 +21,10 @@ public class AuthFilter extends UsernamePasswordAuthenticationFilter {
     private String jsonUsername;
     private String jsonPassword;
 
+
     @Override
     protected String obtainPassword(HttpServletRequest request) {
         String password = null;
-
         if ("application/json".equals(request.getHeader("Content-Type"))) {
             password = this.jsonPassword;
         }else{
@@ -51,6 +51,7 @@ public class AuthFilter extends UsernamePasswordAuthenticationFilter {
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         UsernamePasswordAuthenticationToken token;
         if ("application/json".equals(request.getHeader("Content-Type"))) {
+            
             try {
                 StringBuffer sb = new StringBuffer();
                 String line = null;
@@ -76,8 +77,4 @@ public class AuthFilter extends UsernamePasswordAuthenticationFilter {
         return this.getAuthenticationManager().authenticate(token);
     }
 
-    @Override
-    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
-        super.successfulAuthentication(request, response, chain, authResult);
-    }
 }
