@@ -1,20 +1,14 @@
 package com.halnode.atlantis.spring.authentication;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.NoArgsConstructor;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.stereotype.Component;
 
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
-import java.io.IOException;
 
 public class AuthFilter extends UsernamePasswordAuthenticationFilter {
 
@@ -27,7 +21,7 @@ public class AuthFilter extends UsernamePasswordAuthenticationFilter {
         String password = null;
         if ("application/json".equals(request.getHeader("Content-Type"))) {
             password = this.jsonPassword;
-        }else{
+        } else {
             password = super.obtainPassword(request);
         }
 
@@ -35,12 +29,12 @@ public class AuthFilter extends UsernamePasswordAuthenticationFilter {
     }
 
     @Override
-    protected String obtainUsername(HttpServletRequest request){
+    protected String obtainUsername(HttpServletRequest request) {
         String username = null;
 
         if ("application/json".equals(request.getHeader("Content-Type"))) {
             username = this.jsonUsername;
-        }else{
+        } else {
             username = super.obtainUsername(request);
         }
 
@@ -51,13 +45,13 @@ public class AuthFilter extends UsernamePasswordAuthenticationFilter {
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         UsernamePasswordAuthenticationToken token;
         if ("application/json".equals(request.getHeader("Content-Type"))) {
-            
+
             try {
                 StringBuffer sb = new StringBuffer();
                 String line = null;
 
                 BufferedReader reader = request.getReader();
-                while ((line = reader.readLine()) != null){
+                while ((line = reader.readLine()) != null) {
                     sb.append(line);
                 }
 
@@ -69,11 +63,11 @@ public class AuthFilter extends UsernamePasswordAuthenticationFilter {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }else {
+        } else {
             //form
-            return super.attemptAuthentication(request,response);
+            return super.attemptAuthentication(request, response);
         }
-        token=new UsernamePasswordAuthenticationToken(jsonUsername,jsonPassword);
+        token = new UsernamePasswordAuthenticationToken(jsonUsername, jsonPassword);
         return this.getAuthenticationManager().authenticate(token);
     }
 

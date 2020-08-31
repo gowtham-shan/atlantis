@@ -38,7 +38,7 @@ public class CustomFilterInvocationSecurityMetadataSource implements FilterInvoc
      * in order to decide the access for the requested url ( REQUESTED URL and it's info are fetched from HttpServletRequest).
      */
     private void loadConfigurationMap() {
-        try ( InputStream inputStream = getClass().getResourceAsStream(URL_CONFIGURATIONS_FILE_LOCATION)){
+        try (InputStream inputStream = getClass().getResourceAsStream(URL_CONFIGURATIONS_FILE_LOCATION)) {
             configurationMap = new LinkedHashMap<>();
             ObjectMapper objectMapper = new ObjectMapper();
             List<AuthorizationConfig> inputConfigurations = objectMapper.readValue(inputStream, new TypeReference<>() {
@@ -46,11 +46,11 @@ public class CustomFilterInvocationSecurityMetadataSource implements FilterInvoc
             for (AuthorizationConfig config : inputConfigurations) {
                 String accessRoles = StringUtils.collectionToDelimitedString(config.getRoles(), ",");
                 List<ConfigAttribute> configAttributes = SecurityConfig.createListFromCommaDelimitedString(accessRoles);
-                if(ObjectUtils.isEmpty(config.getMethods())){
-                    configurationMap.put(new AntPathRequestMatcher(config.getUrl(),null,false),configAttributes);
-                }else{
-                    for(String method:config.getMethods()){
-                        configurationMap.put(new AntPathRequestMatcher(config.getUrl(), method,false), configAttributes);
+                if (ObjectUtils.isEmpty(config.getMethods())) {
+                    configurationMap.put(new AntPathRequestMatcher(config.getUrl(), null, false), configAttributes);
+                } else {
+                    for (String method : config.getMethods()) {
+                        configurationMap.put(new AntPathRequestMatcher(config.getUrl(), method, false), configAttributes);
                     }
                 }
             }

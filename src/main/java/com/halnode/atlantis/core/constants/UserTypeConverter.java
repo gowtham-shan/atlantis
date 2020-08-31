@@ -4,13 +4,13 @@ import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 
 @Converter(autoApply = true)
-public class UserTypeConverter implements AttributeConverter<UserType,Integer> {
+public class UserTypeConverter implements AttributeConverter<UserType, Integer> {
 
     @Override
     public Integer convertToDatabaseColumn(UserType attribute) {
-        if(attribute==null)
+        if (attribute == null)
             return null;
-        switch (attribute){
+        switch (attribute) {
             case ADMIN:
                 return 1;
             case STAFF:
@@ -18,15 +18,15 @@ public class UserTypeConverter implements AttributeConverter<UserType,Integer> {
             case CUSTOMER:
                 return 3;
             default:
-                throw new IllegalArgumentException(attribute+" is not supported");
+                throw new IllegalArgumentException(attribute + " is not supported");
         }
     }
 
     @Override
     public UserType convertToEntityAttribute(Integer dbData) {
-        if(dbData==null)
+        if (dbData == null)
             return null;
-        switch (dbData){
+        switch (dbData) {
             case 1:
                 return UserType.ADMIN;
             case 2:
@@ -34,7 +34,7 @@ public class UserTypeConverter implements AttributeConverter<UserType,Integer> {
             case 3:
                 return UserType.CUSTOMER;
             default:
-                throw new IllegalArgumentException(dbData+"is not supported");
+                throw new IllegalArgumentException(dbData + "is not supported");
         }
     }
 }

@@ -20,7 +20,10 @@ import org.springframework.util.ObjectUtils;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -66,17 +69,17 @@ public class UserService {
         query = entityManager.createNativeQuery(String.format("SET SCHEMA '%s';", user.getOrganization().getName()));
         query.executeUpdate();
 
-        JpaRepositoryFactory jpaRepositoryFactory =new JpaRepositoryFactory(entityManager);
+        JpaRepositoryFactory jpaRepositoryFactory = new JpaRepositoryFactory(entityManager);
         RoleRepository roleRepository = jpaRepositoryFactory.getRepository(RoleRepository.class);
         if (UserType.ADMIN.equals(userType)) {
             role = roleRepository.findByName("ROLE_ADMIN");
-        }else if(UserType.STAFF.equals(userType)){
-            role=roleRepository.findByName("ROLE_STAFF");
-        }else if(UserType.CUSTOMER.equals(userType)){
-            role=roleRepository.findByName("ROLE_CUSTOMER");
-        }else{
-            String type="ROLE_"+userType.toString();
-            role=roleRepository.findByName(type);
+        } else if (UserType.STAFF.equals(userType)) {
+            role = roleRepository.findByName("ROLE_STAFF");
+        } else if (UserType.CUSTOMER.equals(userType)) {
+            role = roleRepository.findByName("ROLE_CUSTOMER");
+        } else {
+            String type = "ROLE_" + userType.toString();
+            role = roleRepository.findByName(type);
         }
         user.setRoles(new HashSet<>(Collections.singletonList(role)));
         user.setUserType(userType);
@@ -89,12 +92,12 @@ public class UserService {
     }
 
 
-    public User updateUser(User newUser){
-        Optional<User> optionalUser=userRepository.findById(newUser.getId());
-        if(optionalUser.isPresent()){
-            try{
-                User userFromDb=optionalUser.get();
-                if(!bCryptPasswordEncoder.encode(newUser.getPassword()).equals(userFromDb.getPassword())){
+    public User updateUser(User newUser) {
+        Optional<User> optionalUser = userRepository.findById(newUser.getId());
+        if (optionalUser.isPresent()) {
+            try {
+                User userFromDb = optionalUser.get();
+                if (!bCryptPasswordEncoder.encode(newUser.getPassword()).equals(userFromDb.getPassword())) {
                     userFromDb.setPassword(bCryptPasswordEncoder.encode(newUser.getPassword()));
                 }
                 userFromDb.setUserName(newUser.getUserName());
@@ -104,8 +107,8 @@ public class UserService {
                 userFromDb.setEmail(newUser.getEmail());
                 userFromDb.setName(newUser.getName());
                 return userRepository.save(userFromDb);
-            }catch (Exception e){
-                log.error("Exception while updating the user : "+e.getMessage());
+            } catch (Exception e) {
+                log.error("Exception while updating the user : " + e.getMessage());
                 return null;
             }
         }

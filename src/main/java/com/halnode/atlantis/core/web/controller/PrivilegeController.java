@@ -17,7 +17,7 @@ public class PrivilegeController {
     private final PrivilegeRepository privilegeRepository;
 
     @GetMapping
-    public ResponseEntity<?> getAllPrivileges(){
+    public ResponseEntity<?> getAllPrivileges() {
         return ResponseEntity.ok(privilegeRepository.findAll());
     }
 }

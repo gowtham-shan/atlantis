@@ -16,31 +16,34 @@
   },
   {
     "url": "/api/auth/load-user/",
-    "methods": ["GET"],
+    "methods": [
+      "GET"
+    ],
     "roles": null
   },
   {
     "url": "/api/admin/organization/",
-    "methods": ["POST"],
+    "methods": [
+      "POST"
+    ],
     "roles": null
   },
   {
     "url": "/api/auth/obtain-token/",
-    "methods": ["POST"],
+    "methods": [
+      "POST"
+    ],
     "roles": null
   },
   {
     "url": "/api/admin/**",
     "methods": null,
-    "roles": ["ROLE_ADMIN"]
+    "roles": [
+      "ROLE_ADMIN"
+    ]
   },
   {
     "url": "/",
-    "methods": null,
-    "roles": null
-  },
-  {
-    "url": "/exception",
     "methods": null,
     "roles": null
   }

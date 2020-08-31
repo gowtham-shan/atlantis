@@ -39,6 +39,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     @NonNull
     private final UserDetailsServiceImpl userDetailsService;
 
+
     @Override
     @Transactional(readOnly = true)
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {

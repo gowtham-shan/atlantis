@@ -50,7 +50,7 @@ public class User {
     @JoinColumn(name = "org_id")
     private Organization organization;
 
-    @ManyToMany(cascade = {CascadeType.MERGE,CascadeType.REMOVE}, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.REMOVE}, fetch = FetchType.EAGER)
     @JoinTable(
             name = "auth_user_roles",
             joinColumns = {@JoinColumn(name = "user_id")},
@@ -59,6 +59,6 @@ public class User {
 
     private boolean active;
 
-    @Column(name="user_type")
+    @Column(name = "user_type")
     private UserType userType;
 }

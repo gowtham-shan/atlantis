@@ -42,6 +42,7 @@ dependencies {
     compileOnly 'org.projectlombok:lombok'
     compile group: 'jakarta.validation', name: 'jakarta.validation-api', version: '2.0.2'
     compile group: 'javax.validation', name: 'validation-api', version: '2.0.1.Final'
+    compile group: 'com.amazonaws', name: 'aws-java-sdk', version: '1.11.851'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     runtimeOnly 'org.postgresql:postgresql'
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'

@@ -13,7 +13,7 @@ import javax.validation.Valid;
 @RequestMapping("/api/admin/users/")
 @RequiredArgsConstructor
 public class UserController {
-    
+
     @NonNull
     private final UserService userService;
 
@@ -34,8 +34,8 @@ public class UserController {
 
     @PutMapping
     public ResponseEntity<?> updateUser(@Valid @RequestBody User user) {
-        User updated=userService.updateUser(user);
-        return (updated==null)?ResponseEntity.badRequest().build():ResponseEntity.ok(updated);
+        User updated = userService.updateUser(user);
+        return (updated == null) ? ResponseEntity.badRequest().build() : ResponseEntity.ok(updated);
     }
 
     @DeleteMapping("/{id}/")

@@ -1,6 +1,6 @@
 package com.halnode.atlantis.core.web.controller;
 
-import com.halnode.atlantis.core.exception.ResourceNotFoundException;
+import com.halnode.atlantis.core.exception.TestException;
 import com.halnode.atlantis.core.persistence.dto.UserDTO;
 import com.halnode.atlantis.core.persistence.model.Organization;
 import com.halnode.atlantis.core.persistence.repository.OrganizationRepository;
@@ -18,7 +18,6 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Controller;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,18 +40,18 @@ public class BaseController {
     }
 
     @GetMapping("api/auth/load-user/")
-    public ResponseEntity<?> test(){
+    public ResponseEntity<?> loadUserData() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (!ObjectUtils.isEmpty(auth) && !(auth instanceof AnonymousAuthenticationToken)) {
-            UserDTO userDTO=new UserDTO();
+            UserDTO userDTO = new UserDTO();
             CustomUserDetails userDetails = (CustomUserDetails) auth.getPrincipal();
             userDTO.setAuthenticated(true);
             userDTO.setUser(userDetails.getUser());
             userDTO.setOrganization(userDetails.getUser().getOrganization());
             userDTO.setType(userDetails.getUser().getUserType());
             return ResponseEntity.ok(userDTO);
-        }else {
-           return ResponseEntity.badRequest().build();
+        } else {
+            return ResponseEntity.badRequest().build();
         }
     }
 
@@ -73,7 +72,13 @@ public class BaseController {
     private OrganizationRepository organizationRepository;
 
     @PostMapping("exception")
-    public ResponseEntity<?> excption(@Valid @RequestBody Organization organization){
-        return ResponseEntity.ok(organizationRepository.save(organization));
+    public ResponseEntity<?> excption(@Valid @RequestBody Organization organization) {
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("exception")
+    public ResponseEntity<?> test1() {
+        throw new TestException();
+        //return ResponseEntity.ok().build();
     }
 }

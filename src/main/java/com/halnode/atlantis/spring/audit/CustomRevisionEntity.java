@@ -20,6 +20,6 @@ public class CustomRevisionEntity {
     @RevisionTimestamp
     private long timestamp;
 
-    @Column(name = "user_name",length = 32)
+    @Column(name = "user_name", length = 32)
     private String userName;
 }

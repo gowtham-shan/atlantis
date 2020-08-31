@@ -1,6 +1,5 @@
 package com.halnode.atlantis.core.web.controller;
 
-import com.halnode.atlantis.core.exception.ResourceNotFoundException;
 import com.halnode.atlantis.core.persistence.model.Role;
 import com.halnode.atlantis.core.persistence.repository.RoleRepository;
 import com.halnode.atlantis.core.service.RoleService;

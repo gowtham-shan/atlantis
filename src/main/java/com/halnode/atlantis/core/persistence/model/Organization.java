@@ -19,8 +19,8 @@ public class Organization {
     private Long id;
 
     @NotEmpty(message = "Organization name must not be null or empty")
-    @Size(max =128)
-    @Column(nullable = false,length = 128)
+    @Size(max = 128)
+    @Column(nullable = false, length = 128)
     private String name;
-    
+
 }

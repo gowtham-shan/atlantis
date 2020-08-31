@@ -17,19 +17,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint;
-import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.filter.CorsFilter;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import java.util.Arrays;
-import java.util.Collections;
 
 import static com.halnode.atlantis.util.Constants.DEFAULT_LOGIN_PROCESSING_URL;
 import static com.halnode.atlantis.util.Constants.DEFAULT_LOGOUT_PROCESSING_URL;
@@ -61,10 +54,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public AuthFilter authFilter() throws Exception{
-        AuthFilter authFilter=new AuthFilter();
+    public AuthFilter authFilter() throws Exception {
+        AuthFilter authFilter = new AuthFilter();
         authFilter.setAuthenticationManager(this.authenticationManager());
-        authFilter.setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher(DEFAULT_LOGIN_PROCESSING_URL,"POST"));
+        authFilter.setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher(DEFAULT_LOGIN_PROCESSING_URL, "POST"));
         return authFilter;
     }
 
@@ -87,8 +80,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .cors(withDefaults())
                 .addFilterBefore(authFilter(), UsernamePasswordAuthenticationFilter.class)
-                .csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-                .and()
+                .csrf().disable()
                 .authorizeRequests()
                 .withObjectPostProcessor(new ObjectPostProcessor<FilterSecurityInterceptor>() {
                     public <O extends FilterSecurityInterceptor> O postProcess(O fsi) {

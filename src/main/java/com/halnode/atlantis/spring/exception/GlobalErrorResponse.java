@@ -1,4 +1,4 @@
-package com.halnode.atlantis.core.constants;
+package com.halnode.atlantis.spring.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,15 +16,11 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ErrorResponse {
-
-    private String message;
+public class GlobalErrorResponse {
 
     private LocalDateTime timestamp;
 
     private String url;
 
-    //package error class
-    
-
+    private Object apiError;
 }

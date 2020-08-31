@@ -1,11 +1,12 @@
-package com.halnode.atlantis.core.constants;
+package com.halnode.atlantis.spring.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+
 @Getter
 @AllArgsConstructor
-public enum AtlantisExceptionCodes {
-    INVALID_PARAMETER(1000, "The parameter is invalid");
+public enum AtlantisExceptionCode {
+    TEST_EXCEPTION(1000, "Sample Exception For Testing");
 
     private final int status;
     private final String message;

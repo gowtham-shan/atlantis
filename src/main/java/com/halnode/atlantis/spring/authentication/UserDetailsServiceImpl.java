@@ -50,7 +50,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         //Separate user_name and org_name(i.e., SCHEMA NAME) from the input
         //TODO: Have to redirect the user to login page if exception is thrown in this method.
-        
+
         String currentUserName = userIdentifier.substring(0, userIdentifier.lastIndexOf("@"));
         String currentOrgName = userIdentifier.substring(userIdentifier.lastIndexOf("@") + 1);
 
