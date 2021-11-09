@@ -9,6 +9,7 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.*;
 import com.amazonaws.util.IOUtils;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,6 +22,7 @@ import java.util.Iterator;
 import java.util.List;
 
 @Log4j2
+@RequiredArgsConstructor
 public abstract class S3Service {
 
     private static final Regions DEFAULT_AWS_S3_REGION = Regions.AP_SOUTH_1;
